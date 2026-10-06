@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Packaging & Dispatch - Garment Tracker</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/tables.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    .tab-pills {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .tab-pill-btn {
+      padding: 10px 22px;
+      border-radius: var(--radius-md);
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all var(--transition-fast);
+    }
+    .tab-pill-btn.active {
+      background: var(--primary-color);
+      color: #ffffff;
+      border-color: var(--primary-color);
+      box-shadow: 0 4px 12px rgba(249, 87, 33, 0.25);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand-header">
+        <div class="brand-logo-icon"><i class="fa-solid fa-shirt"></i></div>
+        <div class="brand-text">
+          <h1>Garment Tracker</h1>
+          <p>Production Tracking System</p>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">MENU</div>
+        <div class="nav-item">
+          <a href="dashboard.html" class="nav-link"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+        </div>
+        <div class="nav-section-title">ORDERS</div>
+        <div class="nav-item">
+          <a href="orders.html" class="nav-link"><i class="fa-regular fa-file-lines"></i><span>Orders</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="add-order.html" class="nav-link"><i class="fa-solid fa-plus"></i><span>Add Order</span></a>
+        </div>
+        <div class="nav-section-title">PRODUCTION</div>
+        <div class="nav-item">
+          <a href="production.html" class="nav-link"><i class="fa-solid fa-industry"></i><span>Production</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="quality-check.html" class="nav-link"><i class="fa-solid fa-shield-halved"></i><span>Quality Check</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="packaging-dispatch.html" class="nav-link active"><i class="fa-solid fa-boxes-packing"></i><span>Packaging & Dispatch</span></a>
+        </div>
+        <div class="nav-section-title">EMPLOYEES</div>
+        <div class="nav-item">
+          <a href="employees.html" class="nav-link"><i class="fa-solid fa-users"></i><span>Employees</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="assign-worker.html" class="nav-link"><i class="fa-solid fa-user-plus"></i><span>Assign Worker</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="employee-performance.html" class="nav-link"><i class="fa-solid fa-chart-line"></i><span>Performance</span></a>
+        </div>
+        <div class="nav-section-title">INVENTORY</div>
+        <div class="nav-item">
+          <a href="inventory.html" class="nav-link"><i class="fa-solid fa-cubes-stacked"></i><span>Inventory</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=raw" class="nav-link"><i class="fa-solid fa-layer-group"></i><span>Raw Materials</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=wip" class="nav-link"><i class="fa-solid fa-gears"></i><span>Work in Progress</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=finished" class="nav-link"><i class="fa-solid fa-box-check"></i><span>Finished Goods</span></a>
+        </div>
+        <div class="nav-section-title">REPORTS</div>
+        <div class="nav-item">
+          <a href="reports.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i><span>Reports</span></a>
+        </div>
+        <div class="nav-section-title">SYSTEM</div>
+        <div class="nav-item">
+          <a href="users.html" class="nav-link"><i class="fa-regular fa-user"></i><span>Users</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="settings.html" class="nav-link"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <div class="user-avatar-wrap">
+            <img src="assets/images/admin-avatar.svg" alt="Admin" class="avatar-img">
+            <div>
+              <div class="user-meta-name">Admin</div>
+              <div class="user-meta-role">Administrator</div>
+            </div>
+          </div>
+          <button class="logout-btn logout-trigger" title="Log Out"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div class="header-left">
+          <button id="mobile-menu-toggle" class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+          <div class="search-bar-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="global-search-input" class="search-input" placeholder="Search orders, customers, employees...">
+          </div>
+        </div>
+        <div class="header-right">
+          <button class="header-action-btn" onclick="showToast('Shipment ready for pickup', 'info')"><i class="fa-regular fa-bell"></i><span class="notification-badge">3</span></button>
+          <div class="header-user-dropdown">
+            <button id="header-user-btn" class="header-user-btn">
+              <img src="assets/images/admin-avatar.svg" alt="Admin" class="avatar-img">
+              <div class="header-user-info">
+                <div class="name">Admin</div>
+                <div class="role">Administrator</div>
+              </div>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div id="user-dropdown-menu" class="dropdown-menu">
+              <a href="settings.html" class="dropdown-item"><i class="fa-regular fa-user"></i> Profile</a>
+              <div class="dropdown-divider"></div>
+              <a href="login.html" class="dropdown-item logout-trigger" style="color:var(--danger-color);"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT BODY -->
+      <main class="content-body">
+        <div class="page-header">
+          <div class="page-header-text">
+            <h2>Packaging & Dispatch</h2>
+            <p>Final bagging, carton boxing, export packing, and logistics dispatch management.</p>
+          </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tab-pills">
+          <button id="tab-packaging-btn" class="tab-pill-btn active" onclick="switchSection('packaging')">
+            <i class="fa-solid fa-box-open"></i> Packaging Department
+          </button>
+          <button id="tab-dispatch-btn" class="tab-pill-btn" onclick="switchSection('dispatch')">
+            <i class="fa-solid fa-truck-fast"></i> Logistics & Dispatch
+          </button>
+        </div>
+
+        <!-- SECTION 1: PACKAGING -->
+        <div id="section-packaging" class="table-card">
+          <div class="card-header" style="padding: 20px 24px 0 24px;">
+            <div class="card-title">
+              <i class="fa-solid fa-boxes-packing"></i> Packaging Queue & Status
+            </div>
+            <span class="badge" style="background:#e0f2fe; color:#0284c7;">Polybagging & Master Cartons</span>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Product</th>
+                  <th>Quantity</th>
+                  <th>Packaging Status</th>
+                  <th>Packed Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="packaging-tbody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- SECTION 2: DISPATCH -->
+        <div id="section-dispatch" class="table-card" style="display:none;">
+          <div class="card-header" style="padding: 20px 24px 0 24px;">
+            <div class="card-title">
+              <i class="fa-solid fa-truck-moving"></i> Finished Goods Ready for Dispatch
+            </div>
+            <span class="badge" style="background:#ecfdf5; color:#059669;">Logistics Manifest</span>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Quantity</th>
+                  <th>Dispatch Date</th>
+                  <th>Delivery Information</th>
+                  <th>Dispatch Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="dispatch-tbody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    function switchSection(section) {
+      const packBtn = document.getElementById('tab-packaging-btn');
+      const dispBtn = document.getElementById('tab-dispatch-btn');
+      const packSec = document.getElementById('section-packaging');
+      const dispSec = document.getElementById('section-dispatch');
+
+      if (section === 'packaging') {
+        packBtn.classList.add('active');
+        dispBtn.classList.remove('active');
+        packSec.style.display = 'block';
+        dispSec.style.display = 'none';
+        renderPackaging();
+      } else {
+        dispBtn.classList.add('active');
+        packBtn.classList.remove('active');
+        dispSec.style.display = 'block';
+        packSec.style.display = 'none';
+        renderDispatch();
+      }
+    }
+
+    function renderPackaging() {
+      const tbody = document.getElementById('packaging-tbody');
+      if (!tbody) return;
+      const orders = DataStore.getOrders();
+      // Orders in Packaging or adjacent
+      const packOrders = orders.filter(o => o.currentStage === 'Packaging' || o.currentStage === 'Quality Check');
+
+      tbody.innerHTML = packOrders.map(o => `
+        <tr>
+          <td><a href="order-details.html?id=${o.id}" class="order-id-link font-bold">${o.id}</a></td>
+          <td class="font-medium">${o.product}</td>
+          <td class="font-bold">${o.quantity.toLocaleString()} pcs</td>
+          <td>${getStatusBadge(o.currentStage === 'Packaging' ? 'In Progress' : 'Pending')}</td>
+          <td style="font-size:12.5px; color:var(--text-muted);">${o.deadline}</td>
+          <td>
+            <button class="btn btn-primary btn-sm" onclick="advanceToDispatch('${o.id}')">
+              <i class="fa-solid fa-truck"></i> Move to Dispatch
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderDispatch() {
+      const tbody = document.getElementById('dispatch-tbody');
+      if (!tbody) return;
+      const orders = DataStore.getOrders();
+      const dispatchOrders = orders.filter(o => o.currentStage === 'Dispatch' || o.status === 'Completed');
+
+      tbody.innerHTML = dispatchOrders.map(o => `
+        <tr>
+          <td><a href="order-details.html?id=${o.id}" class="order-id-link font-bold">${o.id}</a></td>
+          <td class="font-medium">${o.customer}</td>
+          <td class="font-bold">${o.quantity.toLocaleString()} pcs</td>
+          <td style="font-size:12.5px; color:var(--text-muted);">${o.deadline}</td>
+          <td style="font-size:12.5px; color:var(--text-body);">
+            <i class="fa-solid fa-location-dot" style="color:var(--primary-color); margin-right:4px;"></i>
+            Freight Waybill #FWB-98421 | DHL Express
+          </td>
+          <td>${getStatusBadge(o.status === 'Completed' ? 'Completed' : 'In Progress')}</td>
+          <td>
+            <button class="btn btn-outline-primary btn-sm" onclick="markDelivered('${o.id}')">
+              <i class="fa-solid fa-check-double"></i> Mark Delivered
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function advanceToDispatch(orderId) {
+      const order = DataStore.getOrderById(orderId);
+      if (!order) return;
+      order.currentStage = 'Dispatch';
+      order.progress = 95;
+      order.status = 'In Progress';
+      order.history.push({
+        stage: 'Dispatch',
+        date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+        user: 'Packaging Lead',
+        status: 'In Progress',
+        note: 'Garments polybagged, packed into master cartons, moved to Dispatch dock.'
+      });
+      DataStore.updateOrder(order);
+      showToast(`Order ${orderId} moved to Dispatch queue`, 'success');
+      switchSection('dispatch');
+    }
+
+    function markDelivered(orderId) {
+      const order = DataStore.getOrderById(orderId);
+      if (!order) return;
+      order.status = 'Completed';
+      order.progress = 100;
+      order.history.push({
+        stage: 'Completed',
+        date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+        user: 'Logistics Lead',
+        status: 'Completed',
+        note: 'Order dispatched and delivered to client facility.'
+      });
+      DataStore.updateOrder(order);
+      showToast(`Order ${orderId} marked as successfully Delivered!`, 'success');
+      renderDispatch();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderPackaging();
+    });
+  </script>
+</body>
+</html>

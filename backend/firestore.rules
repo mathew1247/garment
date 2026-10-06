@@ -1,0 +1,114 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if request is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to get current user data
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    // Role check functions
+    function isAdmin() {
+      return isAuthenticated() && getUserData().role == 'Administrator';
+    }
+    
+    function isManager() {
+      return isAuthenticated() && (getUserData().role == 'Manager' || getUserData().role == 'Administrator');
+    }
+    
+    function isStaff() {
+      return isAuthenticated();
+    }
+
+    // Users collection rules
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin() || isManager());
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Employees collection rules
+    match /employees/{employeeId} {
+      allow read: if isAuthenticated();
+      allow write: if isManager();
+    }
+
+    // Products collection rules
+    match /products/{productId} {
+      allow read: if isAuthenticated();
+      allow write: if isManager();
+    }
+
+    // Orders collection rules
+    match /orders/{orderId} {
+      allow read: if isAuthenticated();
+      allow write: if isManager();
+    }
+
+    // Production stages collection rules
+    match /production/{prodId} {
+      allow read: if isAuthenticated();
+      allow create, delete: if isManager();
+      allow update: if isAuthenticated(); // Workers can update progress
+    }
+
+    // Worker assignments collection rules
+    match /assignments/{assignmentId} {
+      allow read: if isAuthenticated();
+      allow write: if isManager();
+    }
+
+    // Quality check records rules
+    match /qualityChecks/{qcId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Inventory & Transactions collection rules
+    match /inventory/{materialId} {
+      allow read: if isAuthenticated();
+      allow write: if isManager();
+    }
+
+    match /inventoryTransactions/{txnId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if false; // Transactions are append-only
+    }
+
+    // Packaging & Dispatch rules
+    match /packaging/{pkgId} {
+      allow read: if isAuthenticated();
+      allow write: if isManager();
+    }
+
+    match /dispatch/{dspId} {
+      allow read: if isAuthenticated();
+      allow write: if isManager();
+    }
+
+    // Notifications rules
+    match /notifications/{notifId} {
+      allow read: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Audit logs rules - immutable
+    match /auditLogs/{logId} {
+      allow read: if isManager();
+      allow create: if isAuthenticated();
+      allow update, delete: if false; // Audit logs can never be altered or deleted
+    }
+
+    // Default catch-all denies access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

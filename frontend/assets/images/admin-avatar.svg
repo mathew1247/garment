@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="avatarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#334155" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+  </defs>
+  <circle cx="50" cy="50" r="50" fill="url(#avatarGrad)" />
+  <!-- stylized executive avatar face -->
+  <circle cx="50" cy="38" r="18" fill="#fcd34d" />
+  <path d="M50 20 C40 20 34 26 34 35 C38 33 46 33 50 30 C54 33 62 33 66 35 C66 26 60 20 50 20 Z" fill="#1e293b" />
+  <path d="M22 84 C24 64 36 56 50 56 C64 56 76 64 78 84 Z" fill="#f95721" />
+  <polygon points="50,56 44,70 56,70" fill="#ffffff" />
+  <polygon points="50,66 47,84 53,84" fill="#0f172a" />
+</svg>

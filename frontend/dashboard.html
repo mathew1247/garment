@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Garment Tracker Production System</title>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/tables.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand-header">
+        <div class="brand-logo-icon">
+          <i class="fa-solid fa-shirt"></i>
+        </div>
+        <div class="brand-text">
+          <h1>Garment Tracker</h1>
+          <p>Production Tracking System</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">MENU</div>
+        <div class="nav-item">
+          <a href="dashboard.html" class="nav-link active">
+            <i class="fa-solid fa-house"></i>
+            <span>Dashboard</span>
+          </a>
+        </div>
+
+        <div class="nav-section-title">ORDERS</div>
+        <div class="nav-item">
+          <a href="orders.html" class="nav-link">
+            <i class="fa-regular fa-file-lines"></i>
+            <span>Orders</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="add-order.html" class="nav-link">
+            <i class="fa-solid fa-plus"></i>
+            <span>Add Order</span>
+          </a>
+        </div>
+
+        <div class="nav-section-title">PRODUCTION</div>
+        <div class="nav-item">
+          <a href="production.html" class="nav-link">
+            <i class="fa-solid fa-industry"></i>
+            <span>Production</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="quality-check.html" class="nav-link">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Quality Check</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="packaging-dispatch.html" class="nav-link">
+            <i class="fa-solid fa-boxes-packing"></i>
+            <span>Packaging & Dispatch</span>
+          </a>
+        </div>
+
+        <div class="nav-section-title">EMPLOYEES</div>
+        <div class="nav-item">
+          <a href="employees.html" class="nav-link">
+            <i class="fa-solid fa-users"></i>
+            <span>Employees</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="assign-worker.html" class="nav-link">
+            <i class="fa-solid fa-user-plus"></i>
+            <span>Assign Worker</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="employee-performance.html" class="nav-link">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Performance</span>
+          </a>
+        </div>
+
+        <div class="nav-section-title">INVENTORY</div>
+        <div class="nav-item">
+          <a href="inventory.html" class="nav-link">
+            <i class="fa-solid fa-cubes-stacked"></i>
+            <span>Inventory</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=raw" class="nav-link">
+            <i class="fa-solid fa-layer-group"></i>
+            <span>Raw Materials</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=wip" class="nav-link">
+            <i class="fa-solid fa-gears"></i>
+            <span>Work in Progress</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=finished" class="nav-link">
+            <i class="fa-solid fa-box-check"></i>
+            <span>Finished Goods</span>
+          </a>
+        </div>
+
+        <div class="nav-section-title">REPORTS</div>
+        <div class="nav-item">
+          <a href="reports.html" class="nav-link">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Reports</span>
+          </a>
+        </div>
+
+        <div class="nav-section-title">SYSTEM</div>
+        <div class="nav-item">
+          <a href="users.html" class="nav-link">
+            <i class="fa-regular fa-user"></i>
+            <span>Users</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="settings.html" class="nav-link">
+            <i class="fa-solid fa-gear"></i>
+            <span>Settings</span>
+          </a>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <div class="user-avatar-wrap">
+            <img src="assets/images/admin-avatar.svg" alt="Admin Avatar" class="avatar-img">
+            <div>
+              <div class="user-meta-name">Admin</div>
+              <div class="user-meta-role">Administrator</div>
+            </div>
+          </div>
+          <button class="logout-btn logout-trigger" title="Log Out">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOP HEADER -->
+      <header class="top-header">
+        <div class="header-left">
+          <button id="mobile-menu-toggle" class="mobile-menu-btn" title="Toggle Sidebar">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="search-bar-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="global-search-input" class="search-input" placeholder="Search orders, customers, employees...">
+          </div>
+        </div>
+
+        <div class="header-right">
+          <button class="header-action-btn" title="Notifications" onclick="showToast('You have 3 unread manufacturing alerts', 'info')">
+            <i class="fa-regular fa-bell"></i>
+            <span class="notification-badge">3</span>
+          </button>
+          <button class="header-action-btn" title="Messages" onclick="showToast('New message from Sewing Line 2 supervisor', 'info')">
+            <i class="fa-regular fa-envelope"></i>
+            <span class="notification-badge" style="background-color: var(--primary-color);">1</span>
+          </button>
+
+          <div class="header-user-dropdown">
+            <button id="header-user-btn" class="header-user-btn">
+              <img src="assets/images/admin-avatar.svg" alt="Admin" class="avatar-img">
+              <div class="header-user-info">
+                <div class="name">Admin</div>
+                <div class="role">Administrator</div>
+              </div>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+
+            <div id="user-dropdown-menu" class="dropdown-menu">
+              <a href="settings.html" class="dropdown-item">
+                <i class="fa-regular fa-user"></i> My Profile
+              </a>
+              <a href="settings.html" class="dropdown-item">
+                <i class="fa-solid fa-gear"></i> System Settings
+              </a>
+              <div class="dropdown-divider"></div>
+              <a href="login.html" class="dropdown-item logout-trigger" style="color: var(--danger-color);">
+                <i class="fa-solid fa-arrow-right-from-bracket" style="color: var(--danger-color);"></i> Sign Out
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT BODY -->
+      <main class="content-body">
+        <!-- Top Welcome & Date -->
+        <div class="page-header">
+          <div class="page-header-text">
+            <h2>Good Morning, Admin 👋</h2>
+            <p>Here's what's happening with your garment production today.</p>
+          </div>
+          <div class="date-pill">
+            <i class="fa-regular fa-calendar-days"></i>
+            <span>Tuesday, 07 Oct 2026</span>
+          </div>
+        </div>
+
+        <!-- 4 STATISTICS CARDS -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon-wrap stat-icon-orange">
+              <i class="fa-regular fa-file-lines"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-label">Total Orders</div>
+              <div class="stat-value" id="stat-total-orders">24</div>
+              <div class="stat-trend trend-up">
+                <i class="fa-solid fa-arrow-up"></i> 12% <span class="trend-period">vs last week</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrap stat-icon-green">
+              <i class="fa-regular fa-circle-check"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-label">Completed Orders</div>
+              <div class="stat-value" id="stat-completed-orders">8</div>
+              <div class="stat-trend trend-up">
+                <i class="fa-solid fa-arrow-up"></i> 33% <span class="trend-period">vs last week</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrap stat-icon-yellow">
+              <i class="fa-regular fa-clock"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-label">Pending Orders</div>
+              <div class="stat-value" id="stat-pending-orders">5</div>
+              <div class="stat-trend trend-down">
+                <i class="fa-solid fa-arrow-down"></i> 17% <span class="trend-period">vs last week</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrap stat-icon-blue">
+              <i class="fa-solid fa-gear"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-label">In Production</div>
+              <div class="stat-value" id="stat-in-production">11</div>
+              <div class="stat-trend trend-up">
+                <i class="fa-solid fa-arrow-up"></i> 10% <span class="trend-period">vs last week</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2-COLUMN DASHBOARD GRID -->
+        <div class="dashboard-grid">
+          <!-- LEFT COLUMN: Production Stage Progress & Recent Orders -->
+          <div class="dashboard-left-col">
+            <!-- Production Stage Progress Card -->
+            <div class="stage-progress-card">
+              <div class="stage-progress-header">
+                <div class="stage-header-title">
+                  <i class="fa-solid fa-chart-column" style="color:var(--text-muted);"></i>
+                  Production Stage Progress
+                </div>
+                <div class="overall-progress-badge">
+                  <span class="progress-label">Overall Progress 62%</span>
+                  <div class="overall-progress-bar-mini">
+                    <div class="fill" style="width: 62%;"></div>
+                  </div>
+                  <span class="overall-percent-text">62%</span>
+                </div>
+              </div>
+
+              <!-- Stage rows rendered dynamically via dashboard.js -->
+              <div id="stage-progress-list" class="stage-list"></div>
+            </div>
+
+            <!-- Recent Orders Card -->
+            <div class="table-card" style="margin-bottom:0;">
+              <div class="card-header" style="padding: 20px 24px 0 24px; margin-bottom: 12px;">
+                <div class="card-title">
+                  <i class="fa-regular fa-file-lines"></i> Recent Orders
+                </div>
+                <a href="orders.html" class="card-action-link">View All</a>
+              </div>
+
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Customer</th>
+                      <th>Product</th>
+                      <th>Quantity</th>
+                      <th>Current Stage</th>
+                      <th>Status</th>
+                      <th>Deadline</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recent-orders-tbody">
+                    <!-- Populated dynamically by dashboard.js -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN: Inventory Glance, Alerts, Quick Actions -->
+          <div class="dashboard-right-col">
+            <!-- Inventory Status Card -->
+            <div class="card" style="margin-bottom:0;">
+              <div class="card-header">
+                <div class="card-title">
+                  <i class="fa-solid fa-boxes-stacked"></i> Inventory Status
+                </div>
+                <a href="inventory.html" class="card-action-link">View All</a>
+              </div>
+              <div id="inventory-glance-list" class="inventory-list">
+                <!-- Populated dynamically via dashboard.js -->
+              </div>
+            </div>
+
+            <!-- Recent Alerts Card -->
+            <div class="card" style="margin-bottom:0;">
+              <div class="card-header">
+                <div class="card-title">
+                  <i class="fa-regular fa-bell"></i> Recent Alerts
+                </div>
+                <a href="#" class="card-action-link" onclick="showToast('All notifications acknowledged', 'info'); return false;">View All</a>
+              </div>
+              <div id="recent-alerts-list" class="alert-list">
+                <!-- Populated dynamically via dashboard.js -->
+              </div>
+            </div>
+
+            <!-- Quick Actions Card -->
+            <div class="card" style="margin-bottom:0;">
+              <div class="card-header" style="margin-bottom: 16px;">
+                <div class="card-title">
+                  <i class="fa-solid fa-bolt"></i> Quick Actions
+                </div>
+              </div>
+              <div class="quick-actions-list">
+                <a href="add-order.html" class="btn-quick-primary">
+                  <i class="fa-solid fa-plus"></i> Create New Order
+                </a>
+                <a href="assign-worker.html" class="btn-quick-secondary">
+                  <i class="fa-solid fa-user-plus"></i> Assign Worker
+                </a>
+                <a href="production.html" class="btn-quick-secondary">
+                  <i class="fa-solid fa-industry"></i> View Production
+                </a>
+                <a href="inventory.html" class="btn-quick-secondary">
+                  <i class="fa-solid fa-cubes-stacked"></i> Check Inventory
+                </a>
+                <a href="reports.html" class="btn-quick-secondary">
+                  <i class="fa-solid fa-chart-pie"></i> Generate Report
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Shared App JS -->
+  <script src="js/main.js"></script>
+  <script src="js/api.js"></script>
+  <!-- Page Specific JS -->
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

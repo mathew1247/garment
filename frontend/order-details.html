@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Details - Garment Tracker</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/tables.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    /* Production Workflow Timeline Component */
+    .timeline-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      padding: 30px 10px;
+      margin: 10px 0 24px 0;
+      overflow-x: auto;
+    }
+    .timeline-line {
+      position: absolute;
+      top: 50px;
+      left: 40px;
+      right: 40px;
+      height: 4px;
+      background: #e2e8f0;
+      z-index: 1;
+    }
+    .timeline-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+      min-width: 100px;
+    }
+    .timeline-circle {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 3px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      color: var(--text-light);
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+    }
+    .timeline-step.completed .timeline-circle {
+      background: var(--success-color);
+      border-color: var(--success-color);
+      color: #ffffff;
+    }
+    .timeline-step.current .timeline-circle {
+      background: #ffffff;
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(249, 87, 33, 0.2);
+    }
+    .timeline-step.pending .timeline-circle {
+      background: #f8fafc;
+      border-color: #e2e8f0;
+    }
+    .timeline-label {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-dark);
+      text-align: center;
+    }
+    .timeline-status {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .spec-item {
+      padding: 14px 16px;
+      background: #f8fafc;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-light);
+    }
+    .spec-title {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .spec-val {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+    @media (max-width: 768px) {
+      .specs-grid { grid-template-columns: 1fr; }
+      .timeline-container { justify-content: flex-start; gap: 20px; }
+      .timeline-line { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand-header">
+        <div class="brand-logo-icon"><i class="fa-solid fa-shirt"></i></div>
+        <div class="brand-text">
+          <h1>Garment Tracker</h1>
+          <p>Production Tracking System</p>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">MENU</div>
+        <div class="nav-item">
+          <a href="dashboard.html" class="nav-link"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+        </div>
+        <div class="nav-section-title">ORDERS</div>
+        <div class="nav-item">
+          <a href="orders.html" class="nav-link active"><i class="fa-regular fa-file-lines"></i><span>Orders</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="add-order.html" class="nav-link"><i class="fa-solid fa-plus"></i><span>Add Order</span></a>
+        </div>
+        <div class="nav-section-title">PRODUCTION</div>
+        <div class="nav-item">
+          <a href="production.html" class="nav-link"><i class="fa-solid fa-industry"></i><span>Production</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="quality-check.html" class="nav-link"><i class="fa-solid fa-shield-halved"></i><span>Quality Check</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="packaging-dispatch.html" class="nav-link"><i class="fa-solid fa-boxes-packing"></i><span>Packaging & Dispatch</span></a>
+        </div>
+        <div class="nav-section-title">EMPLOYEES</div>
+        <div class="nav-item">
+          <a href="employees.html" class="nav-link"><i class="fa-solid fa-users"></i><span>Employees</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="assign-worker.html" class="nav-link"><i class="fa-solid fa-user-plus"></i><span>Assign Worker</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="employee-performance.html" class="nav-link"><i class="fa-solid fa-chart-line"></i><span>Performance</span></a>
+        </div>
+        <div class="nav-section-title">INVENTORY</div>
+        <div class="nav-item">
+          <a href="inventory.html" class="nav-link"><i class="fa-solid fa-cubes-stacked"></i><span>Inventory</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=raw" class="nav-link"><i class="fa-solid fa-layer-group"></i><span>Raw Materials</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=wip" class="nav-link"><i class="fa-solid fa-gears"></i><span>Work in Progress</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=finished" class="nav-link"><i class="fa-solid fa-box-check"></i><span>Finished Goods</span></a>
+        </div>
+        <div class="nav-section-title">REPORTS</div>
+        <div class="nav-item">
+          <a href="reports.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i><span>Reports</span></a>
+        </div>
+        <div class="nav-section-title">SYSTEM</div>
+        <div class="nav-item">
+          <a href="users.html" class="nav-link"><i class="fa-regular fa-user"></i><span>Users</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="settings.html" class="nav-link"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <div class="user-avatar-wrap">
+            <img src="assets/images/admin-avatar.svg" alt="Admin" class="avatar-img">
+            <div>
+              <div class="user-meta-name">Admin</div>
+              <div class="user-meta-role">Administrator</div>
+            </div>
+          </div>
+          <button class="logout-btn logout-trigger" title="Log Out"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div class="header-left">
+          <button id="mobile-menu-toggle" class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+          <div class="search-bar-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="global-search-input" class="search-input" placeholder="Search orders, customers, employees...">
+          </div>
+        </div>
+        <div class="header-right">
+          <button class="header-action-btn" onclick="showToast('3 unread alerts', 'info')"><i class="fa-regular fa-bell"></i><span class="notification-badge">3</span></button>
+          <div class="header-user-dropdown">
+            <button id="header-user-btn" class="header-user-btn">
+              <img src="assets/images/admin-avatar.svg" alt="Admin" class="avatar-img">
+              <div class="header-user-info">
+                <div class="name">Admin</div>
+                <div class="role">Administrator</div>
+              </div>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div id="user-dropdown-menu" class="dropdown-menu">
+              <a href="settings.html" class="dropdown-item"><i class="fa-regular fa-user"></i> Profile</a>
+              <div class="dropdown-divider"></div>
+              <a href="login.html" class="dropdown-item logout-trigger" style="color:var(--danger-color);"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT BODY -->
+      <main class="content-body">
+        <div class="page-header">
+          <div>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <h2 id="view-order-id">Order ORD001</h2>
+              <span id="view-order-status-badge"></span>
+            </div>
+            <p id="view-order-subtitle" style="color: var(--text-muted); margin-top: 4px;">Customer: ABC Fashion | 500 Pieces | Deadline: 12 Oct 2026</p>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <a href="orders.html" class="btn btn-secondary btn-sm">
+              <i class="fa-solid fa-arrow-left"></i> Back to Orders
+            </a>
+            <button id="btn-advance-stage" class="btn btn-primary btn-sm">
+              <i class="fa-solid fa-forward-step"></i> Advance Stage
+            </button>
+          </div>
+        </div>
+
+        <!-- TIMELINE CARD -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fa-solid fa-timeline"></i> Production Pipeline Progress
+            </div>
+            <span id="timeline-progress-label" style="font-size:13px; font-weight:700; color:var(--primary-color);">60% Complete</span>
+          </div>
+
+          <div class="timeline-container">
+            <div class="timeline-line"></div>
+            <div id="timeline-steps" style="display:flex; width:100%; justify-content:space-between; z-index:2;">
+              <!-- Populated dynamically via JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- DETAILS & SPECIFICATIONS -->
+        <div style="display:grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px;">
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fa-solid fa-sliders"></i> Garment Specifications
+              </div>
+            </div>
+
+            <div class="specs-grid">
+              <div class="spec-item">
+                <div class="spec-title">Product</div>
+                <div class="spec-val" id="spec-product">-</div>
+              </div>
+              <div class="spec-item">
+                <div class="spec-title">Quantity</div>
+                <div class="spec-val" id="spec-quantity">-</div>
+              </div>
+              <div class="spec-item">
+                <div class="spec-title">Priority</div>
+                <div class="spec-val" id="spec-priority">-</div>
+              </div>
+              <div class="spec-item">
+                <div class="spec-title">Fabric Spec</div>
+                <div class="spec-val" id="spec-fabric" style="font-size:12.5px;">-</div>
+              </div>
+              <div class="spec-item">
+                <div class="spec-title">Color Shade</div>
+                <div class="spec-val" id="spec-color">-</div>
+              </div>
+              <div class="spec-item">
+                <div class="spec-title">Size Breakdown</div>
+                <div class="spec-val" id="spec-sizes" style="font-size:12.5px;">-</div>
+              </div>
+            </div>
+
+            <div style="margin-top: 18px; padding: 14px 16px; background: #fff8f5; border: 1px dashed var(--primary-border); border-radius: var(--radius-md);">
+              <div style="font-size:12px; font-weight:700; color:var(--primary-color); margin-bottom:4px;">Special Manufacturing Instructions:</div>
+              <p id="spec-notes" style="font-size:13px; color:var(--text-body);"></p>
+            </div>
+          </div>
+
+          <!-- ASSIGNED WORKER / LEAD -->
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fa-solid fa-user-gear"></i> Assigned Worker / Lead
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:14px; margin-bottom: 18px;">
+              <div style="width:48px; height:48px; border-radius:50%; background:var(--primary-light); color:var(--primary-color); display:flex; align-items:center; justify-content:center; font-size:20px;">
+                <i class="fa-solid fa-user-check"></i>
+              </div>
+              <div>
+                <h4 id="worker-name" style="font-size:15px; font-weight:700;">Rahim Uddin</h4>
+                <p id="worker-dept" style="font-size:12.5px; color:var(--text-muted);">Stitching Lead (Line 2)</p>
+              </div>
+            </div>
+            <div style="border-top:1px solid var(--border-light); padding-top:14px; font-size:13px;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                <span style="color:var(--text-muted);">Current Stage:</span>
+                <span id="worker-stage-badge"></span>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                <span style="color:var(--text-muted);">Order Progress:</span>
+                <span id="worker-progress-pct" style="font-weight:700;">60%</span>
+              </div>
+            </div>
+            <a href="assign-worker.html" class="btn btn-outline-primary btn-sm" style="width:100%; margin-top:14px;">
+              <i class="fa-solid fa-user-pen"></i> Reassign Worker
+            </a>
+          </div>
+        </div>
+
+        <!-- PRODUCTION HISTORY AUDIT TABLE -->
+        <div class="table-card">
+          <div class="card-header" style="padding: 20px 24px 0 24px;">
+            <div class="card-title">
+              <i class="fa-solid fa-clock-rotate-left"></i> Production Audit Trail & Stage Logs
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Stage</th>
+                  <th>Timestamp / Date</th>
+                  <th>Supervised By</th>
+                  <th>Status</th>
+                  <th>Notes / Inspection Remarks</th>
+                </tr>
+              </thead>
+              <tbody id="history-tbody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const orderId = urlParams.get('id') || 'ORD001';
+      const order = DataStore.getOrderById(orderId) || DataStore.getOrders()[0];
+
+      if (!order) return;
+
+      document.getElementById('view-order-id').textContent = `Order ${order.id}`;
+      document.getElementById('view-order-status-badge').innerHTML = getStatusBadge(order.status);
+      document.getElementById('view-order-subtitle').textContent = `Customer: ${order.customer} | ${order.quantity.toLocaleString()} Pieces | Deadline: ${order.deadline}`;
+
+      document.getElementById('spec-product').textContent = order.product;
+      document.getElementById('spec-quantity').textContent = `${order.quantity.toLocaleString()} pcs`;
+      document.getElementById('spec-priority').textContent = order.priority || 'Normal';
+      document.getElementById('spec-fabric').textContent = order.fabricType || 'Standard Cotton';
+      document.getElementById('spec-color').textContent = order.color || 'Standard';
+      document.getElementById('spec-sizes').textContent = order.sizes || 'S, M, L, XL';
+      document.getElementById('spec-notes').textContent = order.notes || 'Strict adherence to garment quality standards.';
+
+      document.getElementById('worker-name').textContent = order.assignedWorker || 'Unassigned';
+      document.getElementById('worker-stage-badge').innerHTML = getStageBadge(order.currentStage);
+      document.getElementById('worker-progress-pct').textContent = `${order.progress || 0}%`;
+      document.getElementById('timeline-progress-label').textContent = `${order.progress || 0}% Complete`;
+
+      // Render Stage Pipeline
+      const stages = [
+        'Order Created',
+        'Cutting',
+        'Stitching',
+        'Finishing',
+        'Quality Check',
+        'Packaging',
+        'Dispatch',
+        'Completed'
+      ];
+
+      const stageIndexMap = {
+        'Order Created': 0,
+        'Cutting': 1,
+        'Stitching': 2,
+        'Finishing': 3,
+        'Quality Check': 4,
+        'Packaging': 5,
+        'Dispatch': 6,
+        'Completed': 7
+      };
+
+      const currentIdx = order.status === 'Completed' ? 7 : (stageIndexMap[order.currentStage] || 1);
+
+      const timelineStepsContainer = document.getElementById('timeline-steps');
+      timelineStepsContainer.innerHTML = stages.map((st, idx) => {
+        let stateClass = 'pending';
+        let iconHtml = '<i class="fa-regular fa-circle" style="font-size:10px;"></i>';
+
+        if (idx < currentIdx) {
+          stateClass = 'completed';
+          iconHtml = '<i class="fa-solid fa-check"></i>';
+        } else if (idx === currentIdx) {
+          stateClass = 'current';
+          iconHtml = '<i class="fa-solid fa-spinner fa-spin" style="font-size:14px;"></i>';
+        }
+
+        return `
+          <div class="timeline-step ${stateClass}">
+            <div class="timeline-circle">
+              ${iconHtml}
+            </div>
+            <div class="timeline-label">${st}</div>
+            <div class="timeline-status">${stateClass === 'completed' ? 'Done' : (stateClass === 'current' ? 'In Progress' : 'Pending')}</div>
+          </div>
+        `;
+      }).join('');
+
+      // History table
+      const historyTbody = document.getElementById('history-tbody');
+      const history = order.history || [];
+      historyTbody.innerHTML = history.map(h => `
+        <tr>
+          <td>${getStageBadge(h.stage)}</td>
+          <td style="font-size:12.5px; color:var(--text-muted);">${h.date}</td>
+          <td class="font-medium">${h.user}</td>
+          <td>${getStatusBadge(h.status)}</td>
+          <td style="font-size:13px; color:var(--text-body);">${h.note}</td>
+        </tr>
+      `).join('');
+
+      // Button: Advance stage
+      document.getElementById('btn-advance-stage').addEventListener('click', () => {
+        const nextIdx = currentIdx + 1;
+        if (nextIdx < stages.length) {
+          const nextStageName = stages[nextIdx];
+          order.currentStage = nextStageName === 'Completed' ? 'Dispatch' : nextStageName;
+          if (nextStageName === 'Completed') {
+            order.status = 'Completed';
+            order.progress = 100;
+          } else {
+            order.progress = Math.min(100, Math.round((nextIdx / (stages.length - 1)) * 100));
+          }
+
+          order.history.push({
+            stage: nextStageName,
+            date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+            user: 'Admin',
+            status: nextStageName === 'Completed' ? 'Completed' : 'In Progress',
+            note: `Advanced to ${nextStageName} stage.`
+          });
+
+          DataStore.updateOrder(order);
+          showToast(`Order transitioned to ${nextStageName}`, 'success');
+          setTimeout(() => location.reload(), 600);
+        } else {
+          showToast('Order is already in final completed state', 'info');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

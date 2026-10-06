@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users - Garment Tracker</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/tables.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand-header">
+        <div class="brand-logo-icon"><i class="fa-solid fa-shirt"></i></div>
+        <div class="brand-text">
+          <h1>Garment Tracker</h1>
+          <p>Production Tracking System</p>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">MENU</div>
+        <div class="nav-item">
+          <a href="dashboard.html" class="nav-link"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+        </div>
+        <div class="nav-section-title">ORDERS</div>
+        <div class="nav-item">
+          <a href="orders.html" class="nav-link"><i class="fa-regular fa-file-lines"></i><span>Orders</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="add-order.html" class="nav-link"><i class="fa-solid fa-plus"></i><span>Add Order</span></a>
+        </div>
+        <div class="nav-section-title">PRODUCTION</div>
+        <div class="nav-item">
+          <a href="production.html" class="nav-link"><i class="fa-solid fa-industry"></i><span>Production</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="quality-check.html" class="nav-link"><i class="fa-solid fa-shield-halved"></i><span>Quality Check</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="packaging-dispatch.html" class="nav-link"><i class="fa-solid fa-boxes-packing"></i><span>Packaging & Dispatch</span></a>
+        </div>
+        <div class="nav-section-title">EMPLOYEES</div>
+        <div class="nav-item">
+          <a href="employees.html" class="nav-link"><i class="fa-solid fa-users"></i><span>Employees</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="assign-worker.html" class="nav-link"><i class="fa-solid fa-user-plus"></i><span>Assign Worker</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="employee-performance.html" class="nav-link"><i class="fa-solid fa-chart-line"></i><span>Performance</span></a>
+        </div>
+        <div class="nav-section-title">INVENTORY</div>
+        <div class="nav-item">
+          <a href="inventory.html" class="nav-link"><i class="fa-solid fa-cubes-stacked"></i><span>Inventory</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=raw" class="nav-link"><i class="fa-solid fa-layer-group"></i><span>Raw Materials</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=wip" class="nav-link"><i class="fa-solid fa-gears"></i><span>Work in Progress</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=finished" class="nav-link"><i class="fa-solid fa-box-check"></i><span>Finished Goods</span></a>
+        </div>
+        <div class="nav-section-title">REPORTS</div>
+        <div class="nav-item">
+          <a href="reports.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i><span>Reports</span></a>
+        </div>
+        <div class="nav-section-title">SYSTEM</div>
+        <div class="nav-item">
+          <a href="users.html" class="nav-link active"><i class="fa-regular fa-user"></i><span>Users</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="settings.html" class="nav-link"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <div class="user-avatar-wrap">
+            <img src="assets/images/admin-avatar.svg" alt="Admin" class="avatar-img">
+            <div>
+              <div class="user-meta-name">Admin</div>
+              <div class="user-meta-role">Administrator</div>
+            </div>
+          </div>
+          <button class="logout-btn logout-trigger" title="Log Out"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div class="header-left">
+          <button id="mobile-menu-toggle" class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+          <div class="search-bar-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="global-search-input" class="search-input" placeholder="Search orders, customers, employees...">
+          </div>
+        </div>
+        <div class="header-right">
+          <button class="header-action-btn" onclick="showToast('All system users verified', 'info')"><i class="fa-regular fa-bell"></i><span class="notification-badge">3</span></button>
+          <div class="header-user-dropdown">
+            <button id="header-user-btn" class="header-user-btn">
+              <img src="assets/images/admin-avatar.svg" alt="Admin" class="avatar-img">
+              <div class="header-user-info">
+                <div class="name">Admin</div>
+                <div class="role">Administrator</div>
+              </div>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div id="user-dropdown-menu" class="dropdown-menu">
+              <a href="settings.html" class="dropdown-item"><i class="fa-regular fa-user"></i> Profile</a>
+              <div class="dropdown-divider"></div>
+              <a href="login.html" class="dropdown-item logout-trigger" style="color:var(--danger-color);"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT BODY -->
+      <main class="content-body">
+        <div class="page-header">
+          <div class="page-header-text">
+            <h2>System Users & Access Control</h2>
+            <p>Manage application credentials, assigned roles, and staff authorization.</p>
+          </div>
+          <div>
+            <button id="btn-add-user" class="btn btn-primary">
+              <i class="fa-solid fa-user-plus"></i> Add New User
+            </button>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-toolbar">
+            <div class="table-toolbar-left">
+              <div class="table-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="user-search-input" placeholder="Search user name or role...">
+              </div>
+              <select class="table-filter-select" id="user-role-filter">
+                <option value="all">All Roles</option>
+                <option value="Administrator">Administrator</option>
+                <option value="Manager">Manager</option>
+                <option value="Staff">Staff</option>
+              </select>
+            </div>
+            <div class="table-toolbar-right">
+              <span id="user-count-badge" class="badge" style="background:#f1f5f9; color:var(--text-muted); font-size:12.5px; padding:6px 12px;">5 Users</span>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>User ID</th>
+                  <th>Full Name</th>
+                  <th>Username</th>
+                  <th>Access Role</th>
+                  <th>Account Status</th>
+                  <th>Last Login Activity</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="users-table-tbody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initUsersPage();
+    });
+
+    let userRoleFilter = 'all';
+    let userSearchText = '';
+
+    function initUsersPage() {
+      const searchInput = document.getElementById('user-search-input');
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          userSearchText = e.target.value.toLowerCase().trim();
+          renderUsersTable();
+        });
+      }
+
+      const roleFilter = document.getElementById('user-role-filter');
+      if (roleFilter) {
+        roleFilter.addEventListener('change', (e) => {
+          userRoleFilter = e.target.value;
+          renderUsersTable();
+        });
+      }
+
+      const addBtn = document.getElementById('btn-add-user');
+      if (addBtn) {
+        addBtn.addEventListener('click', openAddUserModal);
+      }
+
+      renderUsersTable();
+    }
+
+    function renderUsersTable() {
+      const tbody = document.getElementById('users-table-tbody');
+      const countBadge = document.getElementById('user-count-badge');
+      if (!tbody) return;
+
+      const users = DataStore.getUsers();
+      const filtered = users.filter(u => {
+        const matchesRole = userRoleFilter === 'all' || u.role === userRoleFilter;
+        const matchesSearch = !userSearchText ||
+          u.name.toLowerCase().includes(userSearchText) ||
+          u.username.toLowerCase().includes(userSearchText) ||
+          u.id.toLowerCase().includes(userSearchText);
+        return matchesRole && matchesSearch;
+      });
+
+      if (countBadge) countBadge.textContent = `${filtered.length} Users`;
+
+      tbody.innerHTML = filtered.map(u => `
+        <tr>
+          <td class="font-bold">${u.id}</td>
+          <td>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:32px; height:32px; border-radius:50%; background:var(--primary-light); color:var(--primary-color); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px;">
+                ${u.name[0]}
+              </div>
+              <span class="font-bold">${u.name}</span>
+            </div>
+          </td>
+          <td><code>@${u.username}</code></td>
+          <td>
+            <span class="badge" style="background:#f1f5f9; color:var(--text-dark); font-weight:600;">
+              <i class="fa-solid fa-shield" style="color:var(--primary-color); font-size:10px; margin-right:4px;"></i>${u.role}
+            </span>
+          </td>
+          <td>${getStatusBadge(u.status)}</td>
+          <td style="font-size:12.5px; color:var(--text-muted);">${u.lastLogin}</td>
+          <td>
+            <div class="table-actions">
+              <button class="action-btn" title="Toggle Active / Inactive" onclick="toggleUserStatus('${u.id}')">
+                <i class="fa-solid fa-power-off"></i>
+              </button>
+              <button class="action-btn btn-delete" title="Delete User" onclick="deleteUserPrompt('${u.id}')">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function toggleUserStatus(userId) {
+      const users = DataStore.getUsers();
+      const user = users.find(u => u.id === userId);
+      if (!user) return;
+      user.status = user.status === 'Active' ? 'Inactive' : 'Active';
+      DataStore.saveUsers(users);
+      showToast(`${user.username} status set to ${user.status}`, 'info');
+      renderUsersTable();
+    }
+
+    function deleteUserPrompt(userId) {
+      if (userId === 'USR001') {
+        showToast('Default Administrator cannot be removed', 'warning');
+        return;
+      }
+      showConfirmDialog('Deactivate / Remove User', `Are you sure you want to remove user <strong>${userId}</strong>?`, () => {
+        let users = DataStore.getUsers();
+        users = users.filter(u => u.id !== userId);
+        DataStore.saveUsers(users);
+        showToast('User removed', 'success');
+        renderUsersTable();
+      });
+    }
+
+    function openAddUserModal() {
+      const existing = document.getElementById('add-user-modal');
+      if (existing) existing.remove();
+
+      const nextId = 'USR' + String(DataStore.getUsers().length + 1).padStart(3, '0');
+
+      const modalHtml = `
+        <div id="add-user-modal" class="modal-overlay active">
+          <div class="modal-container">
+            <div class="modal-header">
+              <h3 class="modal-title">Create System User</h3>
+              <button class="modal-close-btn" onclick="document.getElementById('add-user-modal').remove()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+              <form id="new-user-form">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label class="form-label">User ID</label>
+                    <input type="text" class="form-control" value="${nextId}" readonly>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Full Name <span class="required">*</span></label>
+                    <input type="text" class="form-control" id="new-usr-name" placeholder="e.g. John Doe" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Username <span class="required">*</span></label>
+                    <input type="text" class="form-control" id="new-usr-uname" placeholder="e.g. jdoe" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Role <span class="required">*</span></label>
+                    <select class="form-control" id="new-usr-role">
+                      <option value="Administrator">Administrator</option>
+                      <option value="Manager">Manager</option>
+                      <option value="Staff" selected>Staff</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-span-2">
+                    <label class="form-label">Temporary Password <span class="required">*</span></label>
+                    <input type="password" class="form-control" id="new-usr-pass" value="welcome123" required>
+                  </div>
+                </div>
+                <div class="modal-footer" style="margin: 0 -24px -24px -24px;">
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('add-user-modal').remove()">Cancel</button>
+                  <button type="submit" class="btn btn-primary btn-sm">Create User</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+      document.getElementById('new-user-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const newUser = {
+          id: nextId,
+          name: document.getElementById('new-usr-name').value,
+          username: document.getElementById('new-usr-uname').value,
+          role: document.getElementById('new-usr-role').value,
+          status: 'Active',
+          lastLogin: 'Never'
+        };
+
+        const users = DataStore.getUsers();
+        users.push(newUser);
+        DataStore.saveUsers(users);
+
+        document.getElementById('add-user-modal').remove();
+        showToast(`User ${newUser.username} registered`, 'success');
+        renderUsersTable();
+      });
+    }
+  </script>
+</body>
+</html>

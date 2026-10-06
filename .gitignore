@@ -1,0 +1,34 @@
+# Firebase Service Account Credentials - NEVER COMMIT
+serviceAccountKey.json
+*.serviceAccountKey.json
+backend/serviceAccountKey.json
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+backend/.env
+
+# Python
+venv/
+env/
+ENV/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Testing & Cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

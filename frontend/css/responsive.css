@@ -1,0 +1,149 @@
+/* ========================================================
+   GARMENT TRACKER - RESPONSIVE STYLESHEET
+   ======================================================== */
+
+/* Large Tablets & Small Laptops (max-width: 1200px) */
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Tablets (max-width: 992px) */
+@media (max-width: 992px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.show {
+    transform: translateX(0);
+  }
+
+  .main-wrapper {
+    margin-left: 0;
+  }
+
+  .mobile-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sidebar-backdrop.show {
+    display: block;
+  }
+
+  .content-body {
+    padding: 20px 20px 40px 20px;
+  }
+
+  .top-header {
+    padding: 0 20px;
+  }
+
+  .form-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile Devices (max-width: 768px) */
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .stat-card {
+    padding: 16px 18px;
+  }
+
+  .header-left {
+    max-width: none;
+  }
+
+  .header-user-info {
+    display: none;
+  }
+
+  .stage-row {
+    grid-template-columns: 32px 1fr auto;
+    row-gap: 8px;
+  }
+
+  .stage-row .stage-order-count {
+    display: none;
+  }
+
+  .stage-row .stage-bar-track {
+    grid-column: span 3;
+  }
+
+  .stage-percentage {
+    text-align: right;
+  }
+
+  .form-grid,
+  .form-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .form-group.col-span-2,
+  .form-group.col-span-3 {
+    grid-column: span 1;
+  }
+
+  .table-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .table-toolbar-left,
+  .table-toolbar-right {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .table-search {
+    max-width: none;
+    width: 100%;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .card {
+    padding: 18px 16px;
+  }
+
+  .form-card {
+    padding: 20px 16px;
+  }
+}
+
+/* Small Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+  .search-bar-wrap {
+    display: none; /* Hide top search bar on tiny screens to preserve header space */
+  }
+
+  .search-bar-wrap.mobile-active {
+    display: block;
+    position: absolute;
+    top: 72px;
+    left: 0;
+    right: 0;
+    padding: 10px 16px;
+    background: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .login-card {
+    padding: 28px 20px;
+  }
+}

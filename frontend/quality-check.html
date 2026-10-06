@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quality Control - Garment Tracker</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/tables.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand-header">
+        <div class="brand-logo-icon"><i class="fa-solid fa-shirt"></i></div>
+        <div class="brand-text">
+          <h1>Garment Tracker</h1>
+          <p>Production Tracking System</p>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">MENU</div>
+        <div class="nav-item">
+          <a href="dashboard.html" class="nav-link"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+        </div>
+        <div class="nav-section-title">ORDERS</div>
+        <div class="nav-item">
+          <a href="orders.html" class="nav-link"><i class="fa-regular fa-file-lines"></i><span>Orders</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="add-order.html" class="nav-link"><i class="fa-solid fa-plus"></i><span>Add Order</span></a>
+        </div>
+        <div class="nav-section-title">PRODUCTION</div>
+        <div class="nav-item">
+          <a href="production.html" class="nav-link"><i class="fa-solid fa-industry"></i><span>Production</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="quality-check.html" class="nav-link active"><i class="fa-solid fa-shield-halved"></i><span>Quality Check</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="packaging-dispatch.html" class="nav-link"><i class="fa-solid fa-boxes-packing"></i><span>Packaging & Dispatch</span></a>
+        </div>
+        <div class="nav-section-title">EMPLOYEES</div>
+        <div class="nav-item">
+          <a href="employees.html" class="nav-link"><i class="fa-solid fa-users"></i><span>Employees</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="assign-worker.html" class="nav-link"><i class="fa-solid fa-user-plus"></i><span>Assign Worker</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="employee-performance.html" class="nav-link"><i class="fa-solid fa-chart-line"></i><span>Performance</span></a>
+        </div>
+        <div class="nav-section-title">INVENTORY</div>
+        <div class="nav-item">
+          <a href="inventory.html" class="nav-link"><i class="fa-solid fa-cubes-stacked"></i><span>Inventory</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=raw" class="nav-link"><i class="fa-solid fa-layer-group"></i><span>Raw Materials</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=wip" class="nav-link"><i class="fa-solid fa-gears"></i><span>Work in Progress</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=finished" class="nav-link"><i class="fa-solid fa-box-check"></i><span>Finished Goods</span></a>
+        </div>
+        <div class="nav-section-title">REPORTS</div>
+        <div class="nav-item">
+          <a href="reports.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i><span>Reports</span></a>
+        </div>
+        <div class="nav-section-title">SYSTEM</div>
+        <div class="nav-item">
+          <a href="users.html" class="nav-link"><i class="fa-regular fa-user"></i><span>Users</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="settings.html" class="nav-link"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <div class="user-avatar-wrap">
+            <img src="assets/images/admin-avatar.svg" alt="Admin" class="avatar-img">
+            <div>
+              <div class="user-meta-name">Admin</div>
+              <div class="user-meta-role">Administrator</div>
+            </div>
+          </div>
+          <button class="logout-btn logout-trigger" title="Log Out"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div class="header-left">
+          <button id="mobile-menu-toggle" class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+          <div class="search-bar-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="global-search-input" class="search-input" placeholder="Search orders, customers, employees...">
+          </div>
+        </div>
+        <div class="header-right">
+          <button class="header-action-btn" onclick="showToast('Quality alert on ORD007 (Rework flagged)', 'warning')"><i class="fa-regular fa-bell"></i><span class="notification-badge">3</span></button>
+          <div class="header-user-dropdown">
+            <button id="header-user-btn" class="header-user-btn">
+              <img src="assets/images/admin-avatar.svg" alt="Admin" class="avatar-img">
+              <div class="header-user-info">
+                <div class="name">Admin</div>
+                <div class="role">Administrator</div>
+              </div>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div id="user-dropdown-menu" class="dropdown-menu">
+              <a href="settings.html" class="dropdown-item"><i class="fa-regular fa-user"></i> Profile</a>
+              <div class="dropdown-divider"></div>
+              <a href="login.html" class="dropdown-item logout-trigger" style="color:var(--danger-color);"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT BODY -->
+      <main class="content-body">
+        <div class="page-header">
+          <div class="page-header-text">
+            <h2>Quality Control</h2>
+            <p>Perform garment quality inspections, flag defects, and authorize packaging clearance.</p>
+          </div>
+          <button id="btn-show-qc-form" class="btn btn-primary">
+            <i class="fa-solid fa-clipboard-check"></i> Record Inspection
+          </button>
+        </div>
+
+        <!-- NEW QC INSPECTION FORM (Collapsible Card) -->
+        <div id="qc-form-card" class="form-card" style="display:none; margin-bottom: 24px;">
+          <div class="form-section-title">
+            <i class="fa-solid fa-shield-check"></i> Record Garment Quality Inspection
+          </div>
+          <form id="qc-record-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="qc-order-id">Order ID <span class="required">*</span></label>
+                <select id="qc-order-id" class="form-control" required>
+                  <!-- Populated from DataStore -->
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="qc-inspector">Inspector Name <span class="required">*</span></label>
+                <input type="text" id="qc-inspector" class="form-control" value="Kamal Hassan" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="qc-defect-type">Defect Type Identified</label>
+                <select id="qc-defect-type" class="form-control">
+                  <option value="None">None (Zero Defects)</option>
+                  <option value="Loose Stitching">Loose / Skipped Stitching</option>
+                  <option value="Emblem Misalignment">Emblem / Print Misalignment</option>
+                  <option value="Color Shading">Fabric Color Shading Difference</option>
+                  <option value="Stains or Oil Spots">Stains or Oil Spots</option>
+                  <option value="Dimension Deviation">Size Measurement Deviation</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="qc-defect-qty">Defective Pieces Count</label>
+                <input type="number" id="qc-defect-qty" class="form-control" value="0" min="0">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="qc-result">Inspection Result <span class="required">*</span></label>
+                <select id="qc-result" class="form-control" required>
+                  <option value="Passed">Passed (Ready for Packaging)</option>
+                  <option value="Failed">Failed (Requires Rework)</option>
+                  <option value="Pending">Pending (Sample In Progress)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Workflow Status Notice</label>
+                <div id="qc-status-callout" style="padding: 10px 14px; background: #e6f9f0; border-radius: var(--radius-md); font-size: 13px; font-weight: 700; color: #10b981;">
+                  <i class="fa-solid fa-circle-check"></i> Ready for Packaging
+                </div>
+              </div>
+
+              <div class="form-group col-span-2">
+                <label class="form-label" for="qc-remarks">Inspection Remarks & Guidance</label>
+                <textarea id="qc-remarks" class="form-control" placeholder="Specify rework notes or pass authorization notes..."></textarea>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn btn-secondary" onclick="document.getElementById('qc-form-card').style.display='none'">Close</button>
+              <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-check"></i> Submit QC Result
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- QC AUDIT TABLE -->
+        <div class="table-card">
+          <div class="card-header" style="padding: 20px 24px 0 24px;">
+            <div class="card-title">
+              <i class="fa-solid fa-list-check"></i> Quality Inspection Logs
+            </div>
+            <span class="badge" style="background:var(--primary-light); color:var(--primary-color);">AQL 2.5 Standard</span>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Product</th>
+                  <th>Batch Qty</th>
+                  <th>QA Inspector</th>
+                  <th>Date</th>
+                  <th>Defect Category</th>
+                  <th>Defects</th>
+                  <th>Result</th>
+                  <th>Workflow Action / Remarks</th>
+                </tr>
+              </thead>
+              <tbody id="qc-table-tbody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initQCPage();
+    });
+
+    function initQCPage() {
+      // Toggle Form Card
+      const btnShow = document.getElementById('btn-show-qc-form');
+      const formCard = document.getElementById('qc-form-card');
+      if (btnShow) {
+        btnShow.addEventListener('click', () => {
+          formCard.style.display = formCard.style.display === 'none' ? 'block' : 'none';
+          if (formCard.style.display === 'block') {
+            formCard.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+      }
+
+      // Populate Order Select
+      const select = document.getElementById('qc-order-id');
+      const orders = DataStore.getOrders();
+      select.innerHTML = orders.map(o => `
+        <option value="${o.id}">${o.id} - ${o.customer} (${o.product}, ${o.quantity} pcs)</option>
+      `).join('');
+
+      // Status Callout dynamic response
+      const resultSelect = document.getElementById('qc-result');
+      const statusCallout = document.getElementById('qc-status-callout');
+      resultSelect.addEventListener('change', () => {
+        if (resultSelect.value === 'Passed') {
+          statusCallout.style.background = '#e6f9f0';
+          statusCallout.style.color = '#10b981';
+          statusCallout.innerHTML = '<i class="fa-solid fa-circle-check"></i> Ready for Packaging';
+        } else if (resultSelect.value === 'Failed') {
+          statusCallout.style.background = '#fef2f2';
+          statusCallout.style.color = '#ef4444';
+          statusCallout.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Requires Rework';
+        } else {
+          statusCallout.style.background = '#fef7e6';
+          statusCallout.style.color = '#f59e0b';
+          statusCallout.innerHTML = '<i class="fa-regular fa-clock"></i> Inspection In Progress';
+        }
+      });
+
+      // Submit Form
+      document.getElementById('qc-record-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const orderId = select.value;
+        const targetOrder = DataStore.getOrderById(orderId);
+        const resultVal = resultSelect.value;
+        const defectType = document.getElementById('qc-defect-type').value;
+        const defectQty = parseInt(document.getElementById('qc-defect-qty').value, 10);
+        const remarks = document.getElementById('qc-remarks').value || (resultVal === 'Passed' ? 'Ready for Packaging' : 'Requires Rework');
+
+        const newQC = {
+          id: 'QC-' + (100 + DataStore.getQualityChecks().length + 1),
+          orderId: orderId,
+          product: targetOrder ? targetOrder.product : 'Garment',
+          quantity: targetOrder ? targetOrder.quantity : 500,
+          inspector: document.getElementById('qc-inspector').value,
+          inspectionDate: new Date().toISOString().slice(0, 10),
+          defectType: defectType,
+          defectQty: defectQty,
+          result: resultVal,
+          remarks: resultVal === 'Failed' ? `Requires Rework: ${remarks}` : `Ready for Packaging: ${remarks}`
+        };
+
+        DataStore.addQualityCheck(newQC);
+
+        // Update target order workflow
+        if (targetOrder) {
+          if (resultVal === 'Passed') {
+            targetOrder.currentStage = 'Packaging';
+            targetOrder.status = 'In Progress';
+            targetOrder.progress = 85;
+          } else if (resultVal === 'Failed') {
+            targetOrder.currentStage = 'Stitching'; // Send back to rework
+            targetOrder.status = 'Delayed';
+          }
+          targetOrder.history.push({
+            stage: 'Quality Check',
+            date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+            user: newQC.inspector,
+            status: resultVal === 'Passed' ? 'Completed' : 'Delayed',
+            note: newQC.remarks
+          });
+          DataStore.updateOrder(targetOrder);
+        }
+
+        formCard.style.display = 'none';
+        showToast(`QC Inspection logged for ${orderId}: ${resultVal}`, 'success');
+        renderQCTable();
+      });
+
+      renderQCTable();
+    }
+
+    function renderQCTable() {
+      const tbody = document.getElementById('qc-table-tbody');
+      if (!tbody) return;
+
+      const list = DataStore.getQualityChecks();
+      tbody.innerHTML = list.map(item => `
+        <tr>
+          <td><a href="order-details.html?id=${item.orderId}" class="order-id-link font-bold">${item.orderId}</a></td>
+          <td class="font-medium">${item.product}</td>
+          <td class="font-bold">${item.quantity.toLocaleString()}</td>
+          <td><span style="font-weight:600;"><i class="fa-solid fa-user-check" style="color:var(--text-light); font-size:12px; margin-right:4px;"></i>${item.inspector}</span></td>
+          <td style="font-size:12.5px; color:var(--text-muted);">${item.inspectionDate}</td>
+          <td><span class="badge" style="background:#f8fafc; color:var(--text-dark);">${item.defectType}</span></td>
+          <td class="font-bold" style="color: ${item.defectQty > 0 ? 'var(--danger-color)' : 'var(--text-dark)'};">${item.defectQty}</td>
+          <td>${getStatusBadge(item.result)}</td>
+          <td>
+            <div style="font-size:12.5px; font-weight:600; color: ${item.result === 'Failed' ? 'var(--danger-color)' : (item.result === 'Passed' ? 'var(--success-color)' : 'var(--warning-color)')};">
+              ${item.remarks}
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

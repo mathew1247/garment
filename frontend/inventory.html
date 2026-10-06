@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventory - Garment Tracker</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/tables.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    .inv-tab-strip {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .inv-tab-btn {
+      padding: 10px 22px;
+      border-radius: var(--radius-md);
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all var(--transition-fast);
+    }
+    .inv-tab-btn:hover:not(.active) {
+      background: #f8fafc;
+      color: var(--text-dark);
+      border-color: #cbd5e1;
+    }
+    .inv-tab-btn.active {
+      background: var(--primary-color);
+      color: #ffffff;
+      border-color: var(--primary-color);
+      box-shadow: 0 4px 12px rgba(249, 87, 33, 0.25);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand-header">
+        <div class="brand-logo-icon"><i class="fa-solid fa-shirt"></i></div>
+        <div class="brand-text">
+          <h1>Garment Tracker</h1>
+          <p>Production Tracking System</p>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">MENU</div>
+        <div class="nav-item">
+          <a href="dashboard.html" class="nav-link"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+        </div>
+        <div class="nav-section-title">ORDERS</div>
+        <div class="nav-item">
+          <a href="orders.html" class="nav-link"><i class="fa-regular fa-file-lines"></i><span>Orders</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="add-order.html" class="nav-link"><i class="fa-solid fa-plus"></i><span>Add Order</span></a>
+        </div>
+        <div class="nav-section-title">PRODUCTION</div>
+        <div class="nav-item">
+          <a href="production.html" class="nav-link"><i class="fa-solid fa-industry"></i><span>Production</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="quality-check.html" class="nav-link"><i class="fa-solid fa-shield-halved"></i><span>Quality Check</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="packaging-dispatch.html" class="nav-link"><i class="fa-solid fa-boxes-packing"></i><span>Packaging & Dispatch</span></a>
+        </div>
+        <div class="nav-section-title">EMPLOYEES</div>
+        <div class="nav-item">
+          <a href="employees.html" class="nav-link"><i class="fa-solid fa-users"></i><span>Employees</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="assign-worker.html" class="nav-link"><i class="fa-solid fa-user-plus"></i><span>Assign Worker</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="employee-performance.html" class="nav-link"><i class="fa-solid fa-chart-line"></i><span>Performance</span></a>
+        </div>
+        <div class="nav-section-title">INVENTORY</div>
+        <div class="nav-item">
+          <a href="inventory.html" class="nav-link active"><i class="fa-solid fa-cubes-stacked"></i><span>Inventory</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=raw" class="nav-link"><i class="fa-solid fa-layer-group"></i><span>Raw Materials</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=wip" class="nav-link"><i class="fa-solid fa-gears"></i><span>Work in Progress</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=finished" class="nav-link"><i class="fa-solid fa-box-check"></i><span>Finished Goods</span></a>
+        </div>
+        <div class="nav-section-title">REPORTS</div>
+        <div class="nav-item">
+          <a href="reports.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i><span>Reports</span></a>
+        </div>
+        <div class="nav-section-title">SYSTEM</div>
+        <div class="nav-item">
+          <a href="users.html" class="nav-link"><i class="fa-regular fa-user"></i><span>Users</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="settings.html" class="nav-link"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <div class="user-avatar-wrap">
+            <img src="assets/images/admin-avatar.svg" alt="Admin" class="avatar-img">
+            <div>
+              <div class="user-meta-name">Admin</div>
+              <div class="user-meta-role">Administrator</div>
+            </div>
+          </div>
+          <button class="logout-btn logout-trigger" title="Log Out"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div class="header-left">
+          <button id="mobile-menu-toggle" class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+          <div class="search-bar-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="global-search-input" class="search-input" placeholder="Search orders, customers, employees...">
+          </div>
+        </div>
+        <div class="header-right">
+          <button class="header-action-btn" onclick="showToast('Low stock alert on Buttons and Zippers', 'warning')"><i class="fa-regular fa-bell"></i><span class="notification-badge">3</span></button>
+          <div class="header-user-dropdown">
+            <button id="header-user-btn" class="header-user-btn">
+              <img src="assets/images/admin-avatar.svg" alt="Admin" class="avatar-img">
+              <div class="header-user-info">
+                <div class="name">Admin</div>
+                <div class="role">Administrator</div>
+              </div>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div id="user-dropdown-menu" class="dropdown-menu">
+              <a href="settings.html" class="dropdown-item"><i class="fa-regular fa-user"></i> Profile</a>
+              <div class="dropdown-divider"></div>
+              <a href="login.html" class="dropdown-item logout-trigger" style="color:var(--danger-color);"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT BODY -->
+      <main class="content-body">
+        <div class="page-header">
+          <div class="page-header-text">
+            <h2>Inventory & Warehouse Management</h2>
+            <p>Monitor raw materials, fabrics, trims, active work in progress, and finished garment inventory.</p>
+          </div>
+          <div>
+            <button id="btn-add-material" class="btn btn-primary">
+              <i class="fa-solid fa-plus"></i> Add Material
+            </button>
+          </div>
+        </div>
+
+        <!-- TABS STRIP -->
+        <div class="inv-tab-strip">
+          <button class="inv-tab-btn active" data-tab="all">
+            <i class="fa-solid fa-cubes-stacked"></i> All Inventory
+          </button>
+          <button class="inv-tab-btn" data-tab="raw">
+            <i class="fa-solid fa-layer-group"></i> Raw Materials & Trims
+          </button>
+          <button class="inv-tab-btn" data-tab="wip">
+            <i class="fa-solid fa-gears"></i> Work in Progress (WIP)
+          </button>
+          <button class="inv-tab-btn" data-tab="finished">
+            <i class="fa-solid fa-box-check"></i> Finished Goods
+          </button>
+        </div>
+
+        <!-- TAB 0: ALL INVENTORY (OVERVIEW) -->
+        <div id="inv-pane-all" class="inv-tab-pane">
+          <!-- Summary Cards Grid -->
+          <div class="stats-grid" style="margin-bottom: 24px;">
+            <div class="stat-card">
+              <div class="stat-card-header">
+                <div>
+                  <div class="stat-title">Total Raw Materials</div>
+                  <div class="stat-value" id="kpi-raw-count">6 Items</div>
+                  <div class="stat-subtitle font-medium"><i class="fa-solid fa-box" style="color:var(--primary-color);"></i> <span id="kpi-raw-units">27,050</span> total units</div>
+                </div>
+                <div class="stat-icon-wrap" style="background:#fff0eb; color:var(--primary-color);">
+                  <i class="fa-solid fa-layer-group"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-card-header">
+                <div>
+                  <div class="stat-title">Active WIP Floor</div>
+                  <div class="stat-value" id="kpi-wip-count">4 Batches</div>
+                  <div class="stat-subtitle font-medium"><i class="fa-solid fa-gear" style="color:#0ea5e9;"></i> Active production orders</div>
+                </div>
+                <div class="stat-icon-wrap" style="background:#e0f2fe; color:#0ea5e9;">
+                  <i class="fa-solid fa-gears"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-card-header">
+                <div>
+                  <div class="stat-title">Finished Goods</div>
+                  <div class="stat-value" id="kpi-finished-count">3 Batches</div>
+                  <div class="stat-subtitle font-medium"><i class="fa-solid fa-warehouse" style="color:#10b981;"></i> Stored in Bay B-4</div>
+                </div>
+                <div class="stat-icon-wrap" style="background:#d1fae5; color:#10b981;">
+                  <i class="fa-solid fa-boxes-packing"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-card-header">
+                <div>
+                  <div class="stat-title">Stock Alerts</div>
+                  <div class="stat-value" id="kpi-low-count" style="color:#eab308;">2 Items</div>
+                  <div class="stat-subtitle font-medium"><i class="fa-solid fa-triangle-exclamation" style="color:#eab308;"></i> Low / Out of stock</div>
+                </div>
+                <div class="stat-icon-wrap" style="background:#fef9c3; color:#ca8a04;">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Master Unified Inventory Table -->
+          <div class="table-card">
+            <div class="card-header" style="padding: 20px 24px; border-bottom: 1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+              <div class="card-title">
+                <i class="fa-solid fa-cubes-stacked"></i> Master Facility Inventory
+              </div>
+              <div class="table-toolbar-left" style="display:flex; gap:12px; align-items:center;">
+                <select class="table-filter-select" id="all-inv-cat-filter">
+                  <option value="all">All Classifications</option>
+                  <option value="Raw Materials">Raw Materials & Trims</option>
+                  <option value="WIP">Work in Progress (Floor)</option>
+                  <option value="Finished">Finished Garments (Bay)</option>
+                </select>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Item / Batch ID</th>
+                    <th>Name / Product</th>
+                    <th>Classification</th>
+                    <th>Quantity On Hand</th>
+                    <th>Warehouse Location</th>
+                    <th>Stock Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="all-inventory-tbody">
+                  <!-- Rendered dynamically by inventory.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 1: RAW MATERIALS -->
+        <div id="inv-pane-raw" class="inv-tab-pane table-card" style="display:none;">
+          <div class="table-toolbar">
+            <div class="table-toolbar-left">
+              <select class="table-filter-select" id="inv-status-filter">
+                <option value="all">All Stock Statuses</option>
+                <option value="In Stock">In Stock</option>
+                <option value="Low Stock">Low Stock</option>
+                <option value="Out of Stock">Out of Stock</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Material ID</th>
+                  <th>Material Name</th>
+                  <th>Category</th>
+                  <th>Quantity In Hand</th>
+                  <th>Unit</th>
+                  <th>Supplier</th>
+                  <th>Stock Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="raw-materials-tbody">
+                <!-- Rendered dynamically by inventory.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 2: WORK IN PROGRESS -->
+        <div id="inv-pane-wip" class="inv-tab-pane table-card" style="display:none;">
+          <div class="card-header" style="padding: 20px 24px 0 24px;">
+            <div class="card-title">
+              <i class="fa-solid fa-gears"></i> Floor WIP Tracking (Cutting, Stitching, Finishing)
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Product</th>
+                  <th>Batch Qty</th>
+                  <th>Current Stage</th>
+                  <th>Progress</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="wip-tbody">
+                <!-- Rendered dynamically by inventory.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 3: FINISHED GOODS -->
+        <div id="inv-pane-finished" class="inv-tab-pane table-card" style="display:none;">
+          <div class="card-header" style="padding: 20px 24px 0 24px;">
+            <div class="card-title">
+              <i class="fa-solid fa-boxes-stacked"></i> Finished Garment Storage
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Product</th>
+                  <th>Quantity</th>
+                  <th>Completion / Deadline</th>
+                  <th>Storage Location</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="finished-goods-tbody">
+                <!-- Rendered dynamically by inventory.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/inventory.js"></script>
+</body>
+</html>

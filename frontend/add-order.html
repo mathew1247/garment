@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create New Order - Garment Tracker</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand-header">
+        <div class="brand-logo-icon"><i class="fa-solid fa-shirt"></i></div>
+        <div class="brand-text">
+          <h1>Garment Tracker</h1>
+          <p>Production Tracking System</p>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">MENU</div>
+        <div class="nav-item">
+          <a href="dashboard.html" class="nav-link"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+        </div>
+        <div class="nav-section-title">ORDERS</div>
+        <div class="nav-item">
+          <a href="orders.html" class="nav-link"><i class="fa-regular fa-file-lines"></i><span>Orders</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="add-order.html" class="nav-link active"><i class="fa-solid fa-plus"></i><span>Add Order</span></a>
+        </div>
+        <div class="nav-section-title">PRODUCTION</div>
+        <div class="nav-item">
+          <a href="production.html" class="nav-link"><i class="fa-solid fa-industry"></i><span>Production</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="quality-check.html" class="nav-link"><i class="fa-solid fa-shield-halved"></i><span>Quality Check</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="packaging-dispatch.html" class="nav-link"><i class="fa-solid fa-boxes-packing"></i><span>Packaging & Dispatch</span></a>
+        </div>
+        <div class="nav-section-title">EMPLOYEES</div>
+        <div class="nav-item">
+          <a href="employees.html" class="nav-link"><i class="fa-solid fa-users"></i><span>Employees</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="assign-worker.html" class="nav-link"><i class="fa-solid fa-user-plus"></i><span>Assign Worker</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="employee-performance.html" class="nav-link"><i class="fa-solid fa-chart-line"></i><span>Performance</span></a>
+        </div>
+        <div class="nav-section-title">INVENTORY</div>
+        <div class="nav-item">
+          <a href="inventory.html" class="nav-link"><i class="fa-solid fa-cubes-stacked"></i><span>Inventory</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=raw" class="nav-link"><i class="fa-solid fa-layer-group"></i><span>Raw Materials</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=wip" class="nav-link"><i class="fa-solid fa-gears"></i><span>Work in Progress</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="inventory.html?tab=finished" class="nav-link"><i class="fa-solid fa-box-check"></i><span>Finished Goods</span></a>
+        </div>
+        <div class="nav-section-title">REPORTS</div>
+        <div class="nav-item">
+          <a href="reports.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i><span>Reports</span></a>
+        </div>
+        <div class="nav-section-title">SYSTEM</div>
+        <div class="nav-item">
+          <a href="users.html" class="nav-link"><i class="fa-regular fa-user"></i><span>Users</span></a>
+        </div>
+        <div class="nav-item">
+          <a href="settings.html" class="nav-link"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <div class="user-avatar-wrap">
+            <img src="assets/images/admin-avatar.svg" alt="Admin" class="avatar-img">
+            <div>
+              <div class="user-meta-name">Admin</div>
+              <div class="user-meta-role">Administrator</div>
+            </div>
+          </div>
+          <button class="logout-btn logout-trigger" title="Log Out"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div class="header-left">
+          <button id="mobile-menu-toggle" class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+          <div class="search-bar-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="global-search-input" class="search-input" placeholder="Search orders, customers, employees...">
+          </div>
+        </div>
+        <div class="header-right">
+          <button class="header-action-btn" onclick="showToast('3 unread alerts', 'info')"><i class="fa-regular fa-bell"></i><span class="notification-badge">3</span></button>
+          <div class="header-user-dropdown">
+            <button id="header-user-btn" class="header-user-btn">
+              <img src="assets/images/admin-avatar.svg" alt="Admin" class="avatar-img">
+              <div class="header-user-info">
+                <div class="name">Admin</div>
+                <div class="role">Administrator</div>
+              </div>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div id="user-dropdown-menu" class="dropdown-menu">
+              <a href="settings.html" class="dropdown-item"><i class="fa-regular fa-user"></i> Profile</a>
+              <div class="dropdown-divider"></div>
+              <a href="login.html" class="dropdown-item logout-trigger" style="color:var(--danger-color);"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT BODY -->
+      <main class="content-body">
+        <div class="page-header">
+          <div class="page-header-text">
+            <h2>Create New Order</h2>
+            <p>Initiate a new garment manufacturing order for the production line.</p>
+          </div>
+          <div>
+            <a href="orders.html" class="btn btn-secondary">
+              <i class="fa-solid fa-arrow-left"></i> Back to Orders
+            </a>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <form id="create-order-form" novalidate>
+            <!-- Basic Information -->
+            <div class="form-section-title">
+              <i class="fa-regular fa-id-card"></i> Order Overview
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="order-id">Order ID <span class="required">*</span></label>
+                <input type="text" id="order-id" class="form-control" readonly>
+                <span class="form-helper-text">Auto-generated sequential tracking ID</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="order-customer">Customer / Buyer Name <span class="required">*</span></label>
+                <input type="text" id="order-customer" class="form-control" placeholder="e.g. ABC Fashion" required>
+                <div class="invalid-feedback">Customer name is required.</div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="order-product">Product Type <span class="required">*</span></label>
+                <select id="order-product" class="form-control" required>
+                  <option value="" disabled selected>Select Product Category</option>
+                  <option value="T-Shirt">T-Shirt</option>
+                  <option value="Shirt">Formal Shirt</option>
+                  <option value="Jacket">Windbreaker / Jacket</option>
+                  <option value="Pants">Twill Pants / Trousers</option>
+                  <option value="Hoodie">Pullover Hoodie</option>
+                  <option value="Uniform">Industrial Uniform</option>
+                </select>
+                <div class="invalid-feedback">Please select a product type.</div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="order-quantity">Total Quantity (Pieces) <span class="required">*</span></label>
+                <input type="number" id="order-quantity" class="form-control" min="50" placeholder="e.g. 500" required>
+                <div class="invalid-feedback">Minimum order quantity is 50 pieces.</div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="order-deadline">Delivery Deadline <span class="required">*</span></label>
+                <input type="date" id="order-deadline" class="form-control" required>
+                <div class="invalid-feedback">Please provide a valid target deadline.</div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="order-priority">Production Priority</label>
+                <select id="order-priority" class="form-control">
+                  <option value="Low">Low Priority</option>
+                  <option value="Medium" selected>Medium Priority</option>
+                  <option value="High">High Priority</option>
+                  <option value="Urgent">Urgent / Rush Order</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Material & Production Specifications -->
+            <div class="form-section-title">
+              <i class="fa-solid fa-palette"></i> Garment Specifications & Materials
+            </div>
+
+            <div class="form-grid-3">
+              <div class="form-group">
+                <label class="form-label" for="order-fabric">Fabric Type <span class="required">*</span></label>
+                <input type="text" id="order-fabric" class="form-control" placeholder="e.g. 100% Combed Cotton 180 GSM" required>
+                <div class="invalid-feedback">Fabric specification required.</div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="order-color">Color / Shade <span class="required">*</span></label>
+                <input type="text" id="order-color" class="form-control" placeholder="e.g. Navy Blue / Olive" required>
+                <div class="invalid-feedback">Color designation required.</div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="order-size">Size Breakdown <span class="required">*</span></label>
+                <input type="text" id="order-size" class="form-control" placeholder="e.g. S:100, M:200, L:150, XL:50" required>
+                <div class="invalid-feedback">Size distribution required.</div>
+              </div>
+
+              <div class="form-group col-span-3">
+                <label class="form-label" for="order-specs">Product Specifications & Special Instructions</label>
+                <textarea id="order-specs" class="form-control" placeholder="Provide stitch type, embroidery, button placement, labeling specs, packing instructions..."></textarea>
+              </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="form-actions">
+              <a href="orders.html" class="btn btn-secondary">Cancel</a>
+              <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-check"></i> Save Order
+              </button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Auto generate next sequential Order ID
+      const orders = DataStore.getOrders();
+      let maxNum = 0;
+      orders.forEach(o => {
+        const num = parseInt(String(o.id || o.orderId || '').replace('ORD', ''), 10);
+        if (!isNaN(num) && num > maxNum) maxNum = num;
+      });
+      const nextId = 'ORD' + String(maxNum + 1).padStart(3, '0');
+      document.getElementById('order-id').value = nextId;
+
+      // Set default deadline 14 days from today
+      const target = new Date();
+      target.setDate(target.getDate() + 14);
+      document.getElementById('order-deadline').value = target.toISOString().slice(0, 10);
+
+      // Handle Submit with validation
+      document.getElementById('create-order-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        let isValid = true;
+
+        const customer = document.getElementById('order-customer');
+        const product = document.getElementById('order-product');
+        const quantity = document.getElementById('order-quantity');
+        const deadline = document.getElementById('order-deadline');
+        const fabric = document.getElementById('order-fabric');
+        const color = document.getElementById('order-color');
+        const size = document.getElementById('order-size');
+
+        [customer, product, quantity, deadline, fabric, color, size].forEach(input => {
+          if (!input.value.trim()) {
+            input.classList.add('is-invalid');
+            isValid = false;
+          } else {
+            input.classList.remove('is-invalid');
+          }
+        });
+
+        if (quantity.value && parseInt(quantity.value, 10) < 50) {
+          quantity.classList.add('is-invalid');
+          isValid = false;
+        }
+
+        if (!isValid) {
+          showToast('Please correct the highlighted fields', 'error');
+          return;
+        }
+
+        const newOrder = {
+          id: nextId,
+          orderId: nextId,
+          customer: customer.value.trim(),
+          customerName: customer.value.trim(),
+          product: product.value,
+          productName: product.value,
+          productType: product.value,
+          quantity: parseInt(quantity.value, 10),
+          currentStage: 'Cutting',
+          status: 'In Progress',
+          deadline: deadline.value,
+          createdDate: new Date().toISOString().slice(0, 10),
+          fabricType: fabric.value.trim(),
+          color: color.value.trim(),
+          sizes: size.value.trim(),
+          priority: document.getElementById('order-priority').value,
+          assignedWorker: 'Unassigned',
+          progress: 10,
+          notes: document.getElementById('order-specs').value.trim() || 'Standard manufacturing guidelines.',
+          history: [
+            {
+              stage: 'Order Created',
+              date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+              user: 'Admin',
+              status: 'Completed',
+              note: `New order ${nextId} created for ${customer.value}`
+            },
+            {
+              stage: 'Cutting',
+              date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+              user: 'System Queue',
+              status: 'In Progress',
+              note: 'Queued to Cutting Department'
+            }
+          ]
+        };
+
+        // Persist to Cloud Firestore via Flask REST API
+        if (typeof ApiService !== 'undefined' && ApiService.createOrder) {
+          try {
+            await ApiService.createOrder(newOrder);
+          } catch (err) {
+            console.warn('Backend sync failed, storing locally:', err);
+          }
+        }
+
+        DataStore.addOrder(newOrder);
+        showToast(`Order ${nextId} created successfully in database!`, 'success');
+        setTimeout(() => {
+          window.location.href = `orders.html`;
+        }, 500);
+      });
+    });
+  </script>
+</body>
+</html>
