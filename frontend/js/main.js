@@ -569,10 +569,87 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.logout-trigger').forEach(el => {
     el.addEventListener('click', (e) => {
       e.preventDefault();
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('garment_current_user');
+      localStorage.removeItem('garment_jwt_token');
       showToast('Logged out successfully', 'info');
       setTimeout(() => {
         window.location.href = 'login.html';
-      }, 600);
+      }, 500);
     });
   });
+
+  // Dynamically synchronize logged-in user profile in header and sidebar
+  syncGlobalUserUI();
+});
+
+// ========================================================
+// GLOBAL USER PROFILE STATE MANAGEMENT
+// ========================================================
+function getActiveUser() {
+  try {
+    const raw = localStorage.getItem('garment_current_user') || localStorage.getItem('currentUser');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && (parsed.name || parsed.username || parsed.email)) {
+        return parsed;
+      }
+    }
+  } catch (e) {
+    console.warn('Error reading active user from storage:', e);
+  }
+  return {
+    name: 'Admin User',
+    username: 'admin',
+    role: 'Administrator',
+    email: 'admin@garment.com'
+  };
+}
+
+function syncGlobalUserUI() {
+  const user = getActiveUser();
+  const displayName = user.name || user.username || (user.email ? user.email.split('@')[0] : 'Admin User');
+  const roleName = user.role || 'Administrator';
+
+  // 1. Top Header User Info Dropdown
+  document.querySelectorAll('.header-user-info .name').forEach(el => {
+    el.textContent = displayName;
+  });
+  document.querySelectorAll('.header-user-info .role').forEach(el => {
+    el.textContent = roleName;
+  });
+
+  // 2. Sidebar Footer Profile Summary
+  document.querySelectorAll('.user-profile-summary .user-meta-name').forEach(el => {
+    el.textContent = displayName;
+  });
+  document.querySelectorAll('.user-profile-summary .user-meta-role').forEach(el => {
+    el.textContent = roleName;
+  });
+
+  // 3. User Avatars tooltip / alt
+  document.querySelectorAll('.user-avatar-wrap img, .header-user-btn img').forEach(img => {
+    img.alt = displayName;
+    img.title = `${displayName} (${roleName})`;
+  });
+
+  // 4. Any elements with data attributes
+  document.querySelectorAll('[data-user-name]').forEach(el => el.textContent = displayName);
+  document.querySelectorAll('[data-user-role]').forEach(el => el.textContent = roleName);
+}
+
+// Make accessible globally
+window.getActiveUser = getActiveUser;
+window.syncGlobalUserUI = syncGlobalUserUI;
+
+// Run immediate sync on script execution if DOM elements already exist
+if (document.readyState === 'interactive' || document.readyState === 'complete') {
+  syncGlobalUserUI();
+} else {
+  document.addEventListener('DOMContentLoaded', syncGlobalUserUI);
+}
+window.addEventListener('storage', (e) => {
+  if (e.key === 'garment_current_user' || e.key === 'currentUser') {
+    syncGlobalUserUI();
+  }
 });

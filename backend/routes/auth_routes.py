@@ -95,6 +95,17 @@ def get_me():
         return error_response("User not found", "NOT_FOUND", 404)
     return success_response(data=user, message="Authenticated user profile retrieved")
 
+@auth_bp.route("/profile", methods=["PUT"])
+@token_required
+def update_profile():
+    """Update authenticated user's own profile."""
+    uid = g.current_user.get("uid") or g.current_user.get("id")
+    data = request.get_json(silent=True) or {}
+    user, err = AuthService.update_user(uid, data)
+    if err:
+        return error_response(err, "UPDATE_FAILED", 400)
+    return success_response(data=user, message="Profile updated successfully")
+
 @auth_bp.route("/logout", methods=["POST"])
 @token_required
 def logout():

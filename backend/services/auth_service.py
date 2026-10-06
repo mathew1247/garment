@@ -253,7 +253,7 @@ class AuthService:
             return None, "User not found"
 
         update_dict = {}
-        for field in ["name", "role", "status", "phone", "profileImage"]:
+        for field in ["name", "role", "status", "phone", "profileImage", "factoryLocation", "location"]:
             if field in data:
                 update_dict[field] = data[field]
 

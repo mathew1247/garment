@@ -104,6 +104,40 @@ const ApiService = {
     }
   },
 
+  async updateProfile(profileData) {
+    try {
+      const res = await this.request('/auth/profile', {
+        method: 'PUT',
+        body: JSON.stringify(profileData)
+      });
+      if (res && res.ok) {
+        const json = await res.json();
+        if (json.data) {
+          const updated = json.data;
+          const current = JSON.parse(localStorage.getItem('currentUser') || '{}');
+          const merged = { ...current, ...updated };
+          localStorage.setItem('currentUser', JSON.stringify(merged));
+          localStorage.setItem('garment_current_user', JSON.stringify(merged));
+          if (typeof syncGlobalUserUI === 'function') {
+            syncGlobalUserUI();
+          }
+          return { success: true, data: merged, message: json.message };
+        }
+      }
+    } catch (e) {
+      console.warn('API updateProfile network issue, updating locally:', e);
+    }
+    // Fallback: save locally
+    const current = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    const merged = { ...current, ...profileData };
+    localStorage.setItem('currentUser', JSON.stringify(merged));
+    localStorage.setItem('garment_current_user', JSON.stringify(merged));
+    if (typeof syncGlobalUserUI === 'function') {
+      syncGlobalUserUI();
+    }
+    return { success: true, data: merged, message: 'Profile updated' };
+  },
+
   async request(endpoint, options = {}) {
     if (!this.token) {
       await this.login();

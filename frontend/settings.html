@@ -189,41 +189,43 @@
             <!-- TAB 1: PROFILE SETTINGS -->
             <div id="tab-profile" class="form-card settings-pane" style="margin: 0; max-width: none;">
               <div class="form-section-title">
-                <i class="fa-regular fa-user"></i> Administrator Profile
+                <i class="fa-regular fa-user"></i> <span id="profile-heading">User Profile</span>
               </div>
 
               <div style="display:flex; align-items:center; gap:20px; margin-bottom: 24px;">
-                <img src="assets/images/admin-avatar.svg" alt="Admin" style="width:72px; height:72px; border-radius:50%; border:2px solid var(--primary-color);">
+                <img src="assets/images/admin-avatar.svg" alt="User" id="profile-avatar-preview" style="width:72px; height:72px; border-radius:50%; border:2px solid var(--primary-color);">
                 <div>
-                  <h4 style="font-size:16px; font-weight:700;">Admin User</h4>
-                  <p style="font-size:13px; color:var(--text-muted);">Lead Production Controller | System Administrator</p>
-                  <button class="btn btn-secondary btn-sm" style="margin-top:8px;" onclick="showToast('Profile photo updated', 'success')">
+                  <h4 id="profile-card-name" style="font-size:16px; font-weight:700;">User Name</h4>
+                  <p id="profile-card-role" style="font-size:13px; color:var(--text-muted);">Staff | Garment Production Team</p>
+                  <button type="button" class="btn btn-secondary btn-sm" style="margin-top:8px;" onclick="showToast('Profile photo upload ready', 'info')">
                     <i class="fa-solid fa-camera"></i> Change Photo
                   </button>
                 </div>
               </div>
 
-              <form onsubmit="event.preventDefault(); showToast('Profile details updated', 'success');">
+              <form id="settings-profile-form">
                 <div class="form-grid">
                   <div class="form-group">
-                    <label class="form-label">Full Name</label>
-                    <input type="text" class="form-control" value="Admin User" required>
+                    <label class="form-label">Full Name <span class="required">*</span></label>
+                    <input type="text" id="settings-full-name" class="form-control" required>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Email Address</label>
-                    <input type="email" class="form-control" value="admin@garment-tracker.com" required>
+                    <label class="form-label">Email Address <span class="required">*</span></label>
+                    <input type="email" id="settings-email" class="form-control" required>
                   </div>
                   <div class="form-group">
                     <label class="form-label">Phone Contact</label>
-                    <input type="text" class="form-control" value="+1 (555) 019-2834">
+                    <input type="text" id="settings-phone" class="form-control" placeholder="+1 (555) 000-0000">
                   </div>
                   <div class="form-group">
                     <label class="form-label">Factory Location</label>
-                    <input type="text" class="form-control" value="Plant Unit 4 - Main Garment Division">
+                    <input type="text" id="settings-location" class="form-control" placeholder="Plant Unit 4 - Main Garment Division">
                   </div>
                 </div>
                 <div class="form-actions">
-                  <button type="submit" class="btn btn-primary">Save Profile</button>
+                  <button type="submit" id="profile-save-btn" class="btn btn-primary">
+                    <i class="fa-regular fa-floppy-disk"></i> Save Profile
+                  </button>
                 </div>
               </form>
             </div>
@@ -341,6 +343,7 @@
     </div>
   </div>
 
+  <script src="js/api.js"></script>
   <script src="js/main.js"></script>
   <script>
     function showSettingsTab(tabId) {
@@ -351,8 +354,92 @@
       if (activePane) activePane.style.display = 'block';
 
       // Find the link that was clicked
-      event.currentTarget.classList.add('active');
+      if (event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+      }
     }
+
+    // Populate user profile into settings form
+    function populateUserProfileForm() {
+      const user = (typeof getActiveUser === 'function') ? getActiveUser() : (JSON.parse(localStorage.getItem('currentUser') || '{}'));
+      const displayName = user.name || user.username || (user.email ? user.email.split('@')[0] : 'User');
+      const roleName = user.role || 'Staff';
+
+      const headingEl = document.getElementById('profile-heading');
+      const cardNameEl = document.getElementById('profile-card-name');
+      const cardRoleEl = document.getElementById('profile-card-role');
+      const nameInput = document.getElementById('settings-full-name');
+      const emailInput = document.getElementById('settings-email');
+      const phoneInput = document.getElementById('settings-phone');
+      const locationInput = document.getElementById('settings-location');
+
+      if (headingEl) headingEl.textContent = `${roleName} Profile`;
+      if (cardNameEl) cardNameEl.textContent = displayName;
+      if (cardRoleEl) cardRoleEl.textContent = `${roleName} | Garment Production Team`;
+      if (nameInput) nameInput.value = user.name || displayName;
+      if (emailInput) emailInput.value = user.email || '';
+      if (phoneInput) phoneInput.value = user.phone || '';
+      if (locationInput) locationInput.value = user.factoryLocation || user.location || 'Plant Unit 4 - Main Garment Division';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      populateUserProfileForm();
+
+      const profileForm = document.getElementById('settings-profile-form');
+      if (profileForm) {
+        profileForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          const nameVal = document.getElementById('settings-full-name').value.trim();
+          const emailVal = document.getElementById('settings-email').value.trim();
+          const phoneVal = document.getElementById('settings-phone').value.trim();
+          const locationVal = document.getElementById('settings-location').value.trim();
+          const saveBtn = document.getElementById('profile-save-btn');
+
+          if (!nameVal || !emailVal) {
+            showToast('Full name and email are required', 'warning');
+            return;
+          }
+
+          saveBtn.disabled = true;
+          saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+          try {
+            const current = (typeof getActiveUser === 'function') ? getActiveUser() : {};
+            const updatedProfile = {
+              ...current,
+              name: nameVal,
+              email: emailVal,
+              phone: phoneVal,
+              factoryLocation: locationVal,
+              location: locationVal
+            };
+
+            // Call ApiService if available to persist to backend
+            if (typeof ApiService !== 'undefined' && ApiService.updateProfile) {
+              await ApiService.updateProfile(updatedProfile);
+            } else {
+              localStorage.setItem('currentUser', JSON.stringify(updatedProfile));
+              localStorage.setItem('garment_current_user', JSON.stringify(updatedProfile));
+            }
+
+            // Immediately update the UI
+            populateUserProfileForm();
+            if (typeof syncGlobalUserUI === 'function') {
+              syncGlobalUserUI();
+            }
+
+            showToast('Profile updated successfully!', 'success');
+          } catch (err) {
+            console.error('Failed to update profile:', err);
+            showToast('Profile saved locally', 'info');
+          } finally {
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = '<i class="fa-regular fa-floppy-disk"></i> Save Profile';
+          }
+        });
+      }
+    });
   </script>
 </body>
 </html>

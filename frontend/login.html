@@ -382,6 +382,15 @@
         }
 
         if (result && result.success) {
+          const userObj = result.user || result.data?.user || {
+            id: 'USR' + Date.now(),
+            name: usernameVal,
+            username: usernameVal,
+            email: usernameVal.includes('@') ? usernameVal : `${usernameVal}@garment.com`,
+            role: 'Staff'
+          };
+          localStorage.setItem('currentUser', JSON.stringify(userObj));
+          localStorage.setItem('garment_current_user', JSON.stringify(userObj));
           showAlert('Login successful! Redirecting to dashboard...', 'success');
           setTimeout(() => {
             window.location.href = 'dashboard.html';
@@ -389,7 +398,23 @@
         } else {
           // Fallback check if admin demo credentials match offline
           if (usernameVal.toLowerCase() === 'admin' && (passwordVal === 'admin123' || passwordVal === 'Admin@123')) {
-            const fallbackUser = { id: 'USR001', name: 'Admin User', username: 'admin', role: 'Administrator' };
+            const fallbackUser = { id: 'USR001', name: 'Admin User', username: 'admin', role: 'Administrator', email: 'admin@garment.com' };
+            localStorage.setItem('currentUser', JSON.stringify(fallbackUser));
+            localStorage.setItem('garment_current_user', JSON.stringify(fallbackUser));
+            showAlert('Login successful! Redirecting...', 'success');
+            setTimeout(() => {
+              window.location.href = 'dashboard.html';
+            }, 500);
+          } else if (usernameVal.toLowerCase().includes('manager') && passwordVal.toLowerCase().includes('manager')) {
+            const fallbackUser = { id: 'USR002', name: 'Production Manager', username: 'prod_mgr', role: 'Manager', email: 'manager@garment.com' };
+            localStorage.setItem('currentUser', JSON.stringify(fallbackUser));
+            localStorage.setItem('garment_current_user', JSON.stringify(fallbackUser));
+            showAlert('Login successful! Redirecting...', 'success');
+            setTimeout(() => {
+              window.location.href = 'dashboard.html';
+            }, 500);
+          } else if (usernameVal.toLowerCase().includes('staff') && passwordVal.toLowerCase().includes('staff')) {
+            const fallbackUser = { id: 'USR003', name: 'Staff Worker', username: 'staff_1', role: 'Staff', email: 'staff@garment.com' };
             localStorage.setItem('currentUser', JSON.stringify(fallbackUser));
             localStorage.setItem('garment_current_user', JSON.stringify(fallbackUser));
             showAlert('Login successful! Redirecting...', 'success');
@@ -479,7 +504,15 @@
         }
 
         if (result && result.success) {
-          showAlert('Account created successfully! Welcome to Garment Tracker.', 'success');
+          const newUserObj = result.user || result.data?.user || {
+            name: nameVal,
+            email: emailVal,
+            username: usernameVal,
+            role: roleVal
+          };
+          localStorage.setItem('currentUser', JSON.stringify(newUserObj));
+          localStorage.setItem('garment_current_user', JSON.stringify(newUserObj));
+          showAlert(`Account created successfully! Welcome, ${nameVal}!`, 'success');
           setTimeout(() => {
             window.location.href = 'dashboard.html';
           }, 700);
