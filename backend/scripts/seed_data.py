@@ -24,6 +24,7 @@ SEED_USERS = [
         "id": "USR001",
         "name": "Admin User",
         "email": "admin@garment.com",
+        "username": "admin",
         "password": ADMIN_HASH,
         "role": "Administrator",
         "phone": "9876543200",
@@ -38,6 +39,7 @@ SEED_USERS = [
         "id": "USR002",
         "name": "Production Manager",
         "email": "manager@garment.com",
+        "username": "manager",
         "password": MANAGER_HASH,
         "role": "Manager",
         "phone": "9876543201",
@@ -52,6 +54,7 @@ SEED_USERS = [
         "id": "USR003",
         "name": "Staff Worker One",
         "email": "staff@garment.com",
+        "username": "staff",
         "password": STAFF_HASH,
         "role": "Staff",
         "phone": "9876543202",
@@ -59,6 +62,21 @@ SEED_USERS = [
         "profileImage": "",
         "createdAt": "2026-01-03T08:00:00Z",
         "updatedAt": "2026-01-03T08:00:00Z",
+        "lastLogin": None
+    },
+    {
+        "uid": "USR_JACKK",
+        "id": "USR_JACKK",
+        "name": "Jack",
+        "email": "jackk@garment.com",
+        "username": "jackk",
+        "password": generate_password_hash("jackk123"),
+        "role": "Staff",
+        "phone": "9876543209",
+        "status": "Active",
+        "profileImage": "",
+        "createdAt": "2026-01-04T08:00:00Z",
+        "updatedAt": "2026-01-04T08:00:00Z",
         "lastLogin": None
     }
 ]

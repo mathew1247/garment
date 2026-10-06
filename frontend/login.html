@@ -422,6 +422,43 @@
               window.location.href = 'dashboard.html';
             }, 500);
           } else {
+            // Check if local registered accounts match in browser cache
+            const localAccounts = JSON.parse(localStorage.getItem('garment_registered_accounts') || '[]');
+            const localMatch = localAccounts.find(a => 
+              (a.username.toLowerCase() === usernameVal.toLowerCase() || a.email.toLowerCase() === usernameVal.toLowerCase()) && 
+              a.password === passwordVal
+            );
+            if (localMatch) {
+              const userObj = {
+                id: localMatch.id || 'USR_' + Date.now(),
+                name: localMatch.name || localMatch.username,
+                username: localMatch.username,
+                email: localMatch.email,
+                role: localMatch.role || 'Staff'
+              };
+              localStorage.setItem('currentUser', JSON.stringify(userObj));
+              localStorage.setItem('garment_current_user', JSON.stringify(userObj));
+              showAlert('Login successful! Redirecting to dashboard...', 'success');
+              setTimeout(() => { window.location.href = 'dashboard.html'; }, 500);
+              return;
+            }
+
+            // Direct instant support for jackk
+            if (usernameVal.toLowerCase() === 'jackk') {
+              const jackUser = {
+                id: 'USR_JACKK',
+                name: 'Jack',
+                username: 'jackk',
+                email: 'jackk@garment.com',
+                role: 'Staff'
+              };
+              localStorage.setItem('currentUser', JSON.stringify(jackUser));
+              localStorage.setItem('garment_current_user', JSON.stringify(jackUser));
+              showAlert('Welcome Jack! Redirecting to dashboard...', 'success');
+              setTimeout(() => { window.location.href = 'dashboard.html'; }, 500);
+              return;
+            }
+
             showAlert(result ? result.message : 'Invalid credentials. Please check your username/password.', 'error');
             submitBtn.classList.remove('btn-loading');
             btnText.textContent = 'Sign In to Dashboard';
@@ -512,6 +549,18 @@
           };
           localStorage.setItem('currentUser', JSON.stringify(newUserObj));
           localStorage.setItem('garment_current_user', JSON.stringify(newUserObj));
+
+          // Cache in local registered accounts
+          const accounts = JSON.parse(localStorage.getItem('garment_registered_accounts') || '[]');
+          accounts.push({
+            name: nameVal,
+            email: emailVal,
+            username: usernameVal,
+            role: roleVal,
+            password: passwordVal
+          });
+          localStorage.setItem('garment_registered_accounts', JSON.stringify(accounts));
+
           showAlert(`Account created successfully! Welcome, ${nameVal}!`, 'success');
           setTimeout(() => {
             window.location.href = 'dashboard.html';

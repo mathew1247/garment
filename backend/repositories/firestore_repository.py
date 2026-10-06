@@ -19,9 +19,34 @@ def serialize_firestore_data(data):
     return data
 
 
+import json
+from pathlib import Path
+
 # Synchronized local memory registry to guarantee 100% uptime even if Firestore daily quotas are exceeded
 _REGISTRY = {}
 _SEEDED = False
+LOCAL_DB_FILE = Path(__file__).resolve().parent.parent / "local_db.json"
+
+def _save_local_registry():
+    try:
+        with open(LOCAL_DB_FILE, "w", encoding="utf-8") as f:
+            json.dump(_REGISTRY, f, default=str)
+    except Exception as e:
+        logger.warning(f"Could not persist local registry to disk: {e}")
+
+def _load_local_registry():
+    global _REGISTRY
+    if LOCAL_DB_FILE.exists():
+        try:
+            with open(LOCAL_DB_FILE, "r", encoding="utf-8") as f:
+                loaded = json.load(f)
+                if isinstance(loaded, dict):
+                    for k, v in loaded.items():
+                        if k not in _REGISTRY:
+                            _REGISTRY[k] = {}
+                        _REGISTRY[k].update(v)
+        except Exception as e:
+            logger.warning(f"Could not load local registry from disk: {e}")
 
 def _ensure_registry_seeded():
     global _SEEDED
@@ -50,6 +75,7 @@ def _ensure_registry_seeded():
                 rec = dict(itm)
                 doc_id = str(rec.get(id_k) or rec.get("id"))
                 _REGISTRY[col][doc_id] = rec
+        _load_local_registry()
     except Exception as e:
         logger.warning(f"Could not load seed data into local registry: {e}")
 
@@ -133,6 +159,7 @@ class FirestoreRepository:
 
         # Update local synchronized store
         self._get_store()[str(item_id)] = data
+        _save_local_registry()
 
         # Persist to Cloud Firestore
         try:
@@ -275,6 +302,7 @@ class FirestoreRepository:
         if "id" not in existing:
             existing["id"] = str(item_id)
         store[str(item_id)] = existing
+        _save_local_registry()
 
         # Update Cloud Firestore
         try:
@@ -297,6 +325,7 @@ class FirestoreRepository:
         # Remove from local store
         store = self._get_store()
         store.pop(str(item_id), None)
+        _save_local_registry()
 
         # Remove from Cloud Firestore
         try:
