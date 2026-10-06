@@ -32,6 +32,61 @@ def login():
         status_code=200
     )
 
+@auth_bp.route("/register", methods=["POST"])
+def register():
+    """
+    Register endpoint for new users.
+    Accepts:
+    {"name": "...", "email": "...", "password": "...", "role": "Staff", "username": "...", "phone": "..."}
+    """
+    data = request.get_json(silent=True) or {}
+    name = data.get("name", "").strip()
+    email = data.get("email", "").strip()
+    password = data.get("password", "").strip()
+    role = data.get("role", "Staff")
+    username = data.get("username", "").strip()
+    phone = data.get("phone", "").strip()
+
+    if not name or not email or not password:
+        return error_response(
+            message="Full name, email address, and password are required.",
+            error_code="VALIDATION_ERROR",
+            status_code=400
+        )
+
+    if len(password) < 6:
+        return error_response(
+            message="Password must be at least 6 characters long.",
+            error_code="VALIDATION_ERROR",
+            status_code=400
+        )
+
+    user, error_msg = AuthService.register_user({
+        "name": name,
+        "email": email,
+        "password": password,
+        "role": role,
+        "username": username,
+        "phone": phone
+    })
+
+    if not user:
+        return error_response(
+            message=error_msg or "Failed to register new user.",
+            error_code="REGISTRATION_FAILED",
+            status_code=400
+        )
+
+    token = AuthService.generate_token(user)
+    return success_response(
+        data={
+            "token": token,
+            "user": user
+        },
+        message="Account created successfully! Welcome to Garment Tracker.",
+        status_code=201
+    )
+
 @auth_bp.route("/me", methods=["GET"])
 @token_required
 def get_me():

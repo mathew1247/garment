@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Garment Tracker Production System</title>
+  <title>Login & Registration - Garment Tracker Production System</title>
   <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,11 +14,106 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/forms.css">
   <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    .auth-tabs {
+      display: flex;
+      background: #f1f5f9;
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 22px;
+      gap: 4px;
+    }
+    .auth-tab-btn {
+      
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 10px 14px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #64748b;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+    }
+    .auth-tab-btn.active {
+      background: #ffffff;
+      color: #2563eb;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .auth-alert {
+      display: none;
+      padding: 11px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.4;
+      margin-bottom: 16px;
+      align-items: center;
+      gap: 10px;
+    }
+    .auth-alert.error {
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+      display: flex;
+    }
+    .auth-alert.success {
+      background: #f0fdf4;
+      color: #16a34a;
+      border: 1px solid #bbf7d0;
+      display: flex;
+    }
+    .password-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .password-wrapper input {
+      padding-right: 40px !important;
+    }
+    .toggle-password-btn {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 4px;
+    }
+    .toggle-password-btn:hover {
+      color: #475569;
+    }
+    .demo-chip {
+      display: inline-block;
+      padding: 4px 9px;
+      font-size: 11.5px;
+      background: #e2e8f0;
+      color: #334155;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 2px 4px 2px 0;
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+    .demo-chip:hover {
+      background: #cbd5e1;
+      color: #0f172a;
+    }
+    .btn-loading {
+      pointer-events: none;
+      opacity: 0.8;
+    }
+  </style>
 </head>
 <body class="login-page-body">
 
   <div class="login-card-wrap">
-    <div class="login-card">
+    <div class="login-card" style="max-width: 440px;">
       <div class="login-logo-center">
         <div class="login-brand-icon">
           <i class="fa-solid fa-shirt"></i>
@@ -27,78 +122,376 @@
         <p class="login-subtitle">Production Tracking System</p>
       </div>
 
-      <div style="margin-bottom: 24px;">
-        <h2 style="font-size: 18px; font-weight: 700; color: var(--text-dark);">Welcome Back 👋</h2>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">Sign in to your manufacturing account</p>
-      </div>
-
-      <form id="login-form" novalidate>
-        <div class="form-group">
-          <label class="form-label" for="login-username">Username or Staff ID <span class="required">*</span></label>
-          <div class="input-group">
-            <i class="fa-regular fa-user input-icon"></i>
-            <input type="text" id="login-username" class="form-control" placeholder="admin" value="admin" required>
-          </div>
-          <div id="username-error" class="invalid-feedback">Please enter your username.</div>
-        </div>
-
-        <div class="form-group" style="margin-top: 16px;">
-          <label class="form-label" for="login-password">Password <span class="required">*</span></label>
-          <div class="input-group">
-            <i class="fa-solid fa-lock input-icon"></i>
-            <input type="password" id="login-password" class="form-control" placeholder="••••••••" value="admin123" required>
-          </div>
-          <div id="password-error" class="invalid-feedback">Password must be at least 6 characters.</div>
-        </div>
-
-        <div class="login-options-row">
-          <label class="form-check">
-            <input type="checkbox" class="form-check-input" id="remember-me" checked>
-            <span class="form-check-label">Remember Me</span>
-          </label>
-          <a href="#" class="forgot-link" onclick="alert('Demo reset instructions sent to registered system administrator email.'); return false;">Forgot Password?</a>
-        </div>
-
-        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 14px;">
-          <i class="fa-solid fa-right-to-bracket"></i> Sign In to Dashboard
+      <!-- Auth Switch Tabs -->
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab-btn active" id="tab-login-btn" onclick="switchAuthTab('login')">
+          <i class="fa-solid fa-right-to-bracket"></i> Sign In
         </button>
-      </form>
-
-      <div class="demo-credentials-box">
-        <strong><i class="fa-solid fa-circle-info"></i> Demo Credentials:</strong><br>
-        Role: <span style="font-weight:600;">System Administrator</span><br>
-        Username: <code>admin</code> | Password: <code>admin123</code>
+        <button type="button" class="auth-tab-btn" id="tab-register-btn" onclick="switchAuthTab('register')">
+          <i class="fa-solid fa-user-plus"></i> New User
+        </button>
       </div>
+
+      <!-- Live Message Alert -->
+      <div id="auth-alert" class="auth-alert">
+        <i id="auth-alert-icon" class="fa-solid fa-circle-exclamation"></i>
+        <span id="auth-alert-text"></span>
+      </div>
+
+      <!-- 1. SIGN IN FORM -->
+      <div id="login-section">
+        <div style="margin-bottom: 20px;">
+          <h2 style="font-size: 17px; font-weight: 700; color: var(--text-dark);">Welcome Back 👋</h2>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">Sign in with your email or staff username</p>
+        </div>
+
+        <form id="login-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="login-username">Email or Username <span class="required">*</span></label>
+            <div class="input-group">
+              <i class="fa-regular fa-user input-icon"></i>
+              <input type="text" id="login-username" class="form-control" placeholder="admin or admin@garment.com" value="admin" required autocomplete="username">
+            </div>
+            <div id="username-error" class="invalid-feedback">Please enter your username or email.</div>
+          </div>
+
+          <div class="form-group" style="margin-top: 14px;">
+            <label class="form-label" for="login-password">Password <span class="required">*</span></label>
+            <div class="input-group password-wrapper">
+              <i class="fa-solid fa-lock input-icon"></i>
+              <input type="password" id="login-password" class="form-control" placeholder="••••••••" value="admin123" required autocomplete="current-password">
+              <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('login-password', this)">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+            <div id="password-error" class="invalid-feedback">Password must be at least 6 characters.</div>
+          </div>
+
+          <div class="login-options-row">
+            <label class="form-check">
+              <input type="checkbox" class="form-check-input" id="remember-me" checked>
+              <span class="form-check-label">Remember Me</span>
+            </label>
+            <a href="#" class="forgot-link" onclick="fillQuickCredentials('admin', 'admin123'); return false;">Reset to Admin</a>
+          </div>
+
+          <button type="submit" id="login-submit-btn" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 14px; margin-top: 8px;">
+            <i class="fa-solid fa-right-to-bracket"></i> <span id="login-btn-text">Sign In to Dashboard</span>
+          </button>
+        </form>
+
+        <div class="demo-credentials-box" style="margin-top: 20px;">
+          <strong><i class="fa-solid fa-bolt"></i> Quick Login Presets:</strong><br>
+          <div style="margin-top: 8px;">
+            <span class="demo-chip" onclick="fillQuickCredentials('admin', 'admin123')">👑 Admin</span>
+            <span class="demo-chip" onclick="fillQuickCredentials('manager@garment.com', 'Manager@123')">👔 Manager</span>
+            <span class="demo-chip" onclick="fillQuickCredentials('staff@garment.com', 'Staff@123')">👷 Staff</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. NEW USER REGISTRATION FORM -->
+      <div id="register-section" style="display: none;">
+        <div style="margin-bottom: 20px;">
+          <h2 style="font-size: 17px; font-weight: 700; color: var(--text-dark);">Create New Account 📝</h2>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">Register your worker or manager credentials</p>
+        </div>
+
+        <form id="register-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="reg-name">Full Name <span class="required">*</span></label>
+            <div class="input-group">
+              <i class="fa-regular fa-id-card input-icon"></i>
+              <input type="text" id="reg-name" class="form-control" placeholder="e.g. John Doe" required autocomplete="name">
+            </div>
+            <div id="reg-name-error" class="invalid-feedback">Please enter your full name.</div>
+          </div>
+
+          <div class="form-group" style="margin-top: 14px;">
+            <label class="form-label" for="reg-email">Email Address <span class="required">*</span></label>
+            <div class="input-group">
+              <i class="fa-regular fa-envelope input-icon"></i>
+              <input type="email" id="reg-email" class="form-control" placeholder="e.g. john@garment.com" required autocomplete="email">
+            </div>
+            <div id="reg-email-error" class="invalid-feedback">Please enter a valid email address.</div>
+          </div>
+
+          <div class="form-group" style="margin-top: 14px;">
+            <label class="form-label" for="reg-username">Username or Staff ID</label>
+            <div class="input-group">
+              <i class="fa-regular fa-user input-icon"></i>
+              <input type="text" id="reg-username" class="form-control" placeholder="e.g. johndoe" autocomplete="username">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top: 14px;">
+            <label class="form-label" for="reg-role">Role in Production <span class="required">*</span></label>
+            <select id="reg-role" class="form-control" style="cursor: pointer;">
+              <option value="Staff">Staff Worker</option>
+              <option value="Operator">Sewing / Cutting Operator</option>
+              <option value="Quality Inspector">Quality Inspector (QA)</option>
+              <option value="Packaging & Dispatch">Packaging & Dispatch</option>
+              <option value="Manager">Production Manager</option>
+              <option value="Administrator">Administrator</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-top: 14px;">
+            <label class="form-label" for="reg-password">Create Password <span class="required">*</span></label>
+            <div class="input-group password-wrapper">
+              <i class="fa-solid fa-lock input-icon"></i>
+              <input type="password" id="reg-password" class="form-control" placeholder="At least 6 characters" required autocomplete="new-password">
+              <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('reg-password', this)">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+            <div id="reg-password-error" class="invalid-feedback">Password must be at least 6 characters.</div>
+          </div>
+
+          <div class="form-group" style="margin-top: 14px;">
+            <label class="form-label" for="reg-confirm-password">Confirm Password <span class="required">*</span></label>
+            <div class="input-group password-wrapper">
+              <i class="fa-solid fa-lock input-icon"></i>
+              <input type="password" id="reg-confirm-password" class="form-control" placeholder="Confirm password" required autocomplete="new-password">
+              <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('reg-confirm-password', this)">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+            <div id="reg-confirm-error" class="invalid-feedback">Passwords do not match.</div>
+          </div>
+
+          <button type="submit" id="reg-submit-btn" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 14px; margin-top: 16px;">
+            <i class="fa-solid fa-user-check"></i> <span id="reg-btn-text">Create Account & Sign In</span>
+          </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 16px;">
+          <p style="font-size: 13px; color: var(--text-muted);">
+            Already have an account? 
+            <a href="#" style="color: #2563eb; font-weight: 600; text-decoration: none;" onclick="switchAuthTab('login'); return false;">Sign In</a>
+          </p>
+        </div>
+      </div>
+
     </div>
   </div>
 
+  <!-- Load API & Main UI Scripts -->
+  <script src="js/api.js"></script>
   <script src="js/main.js"></script>
   <script>
-    document.getElementById('login-form').addEventListener('submit', function(e) {
+    // Tab switching
+    function switchAuthTab(tab) {
+      hideAlert();
+      const loginSection = document.getElementById('login-section');
+      const regSection = document.getElementById('register-section');
+      const loginTabBtn = document.getElementById('tab-login-btn');
+      const regTabBtn = document.getElementById('tab-register-btn');
+
+      if (tab === 'register') {
+        loginSection.style.display = 'none';
+        regSection.style.display = 'block';
+        loginTabBtn.classList.remove('active');
+        regTabBtn.classList.add('active');
+      } else {
+        loginSection.style.display = 'block';
+        regSection.style.display = 'none';
+        loginTabBtn.classList.add('active');
+        regTabBtn.classList.remove('active');
+      }
+    }
+
+    // Toggle password visibility
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      const icon = btn.querySelector('i');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+
+    // Quick fill helper
+    function fillQuickCredentials(username, password) {
+      switchAuthTab('login');
+      document.getElementById('login-username').value = username;
+      document.getElementById('login-password').value = password;
+      hideAlert();
+    }
+
+    // Alert helper
+    function showAlert(message, type = 'error') {
+      const alertBox = document.getElementById('auth-alert');
+      const textSpan = document.getElementById('auth-alert-text');
+      const icon = document.getElementById('auth-alert-icon');
+
+      alertBox.className = `auth-alert ${type}`;
+      textSpan.textContent = message;
+      icon.className = type === 'success' ? 'fa-solid fa-circle-check' : 'fa-solid fa-circle-exclamation';
+      alertBox.style.display = 'flex';
+    }
+
+    function hideAlert() {
+      const alertBox = document.getElementById('auth-alert');
+      alertBox.style.display = 'none';
+    }
+
+    // 1. LOGIN SUBMISSION
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
       e.preventDefault();
+      hideAlert();
+
       const usernameInput = document.getElementById('login-username');
       const passwordInput = document.getElementById('login-password');
+      const submitBtn = document.getElementById('login-submit-btn');
+      const btnText = document.getElementById('login-btn-text');
+
+      const usernameVal = usernameInput.value.trim();
+      const passwordVal = passwordInput.value;
       let isValid = true;
 
-      if (!usernameInput.value.trim()) {
+      if (!usernameVal) {
         usernameInput.classList.add('is-invalid');
         isValid = false;
       } else {
         usernameInput.classList.remove('is-invalid');
       }
 
-      if (!passwordInput.value || passwordInput.value.length < 6) {
+      if (!passwordVal || passwordVal.length < 6) {
         passwordInput.classList.add('is-invalid');
         isValid = false;
       } else {
         passwordInput.classList.remove('is-invalid');
       }
 
-      if (isValid) {
-        showToast('Login successful! Redirecting...', 'success');
-        setTimeout(() => {
-          window.location.href = 'dashboard.html';
-        }, 600);
+      if (!isValid) return;
+
+      // Loading State
+      submitBtn.classList.add('btn-loading');
+      btnText.textContent = 'Verifying credentials...';
+
+      try {
+        let result = null;
+        if (typeof ApiService !== 'undefined' && ApiService.login) {
+          result = await ApiService.login(usernameVal, passwordVal);
+        }
+
+        if (result && result.success) {
+          showAlert('Login successful! Redirecting to dashboard...', 'success');
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';
+          }, 500);
+        } else {
+          // Fallback check if admin demo credentials match offline
+          if (usernameVal.toLowerCase() === 'admin' && (passwordVal === 'admin123' || passwordVal === 'Admin@123')) {
+            const fallbackUser = { id: 'USR001', name: 'Admin User', username: 'admin', role: 'Administrator' };
+            localStorage.setItem('currentUser', JSON.stringify(fallbackUser));
+            localStorage.setItem('garment_current_user', JSON.stringify(fallbackUser));
+            showAlert('Login successful! Redirecting...', 'success');
+            setTimeout(() => {
+              window.location.href = 'dashboard.html';
+            }, 500);
+          } else {
+            showAlert(result ? result.message : 'Invalid credentials. Please check your username/password.', 'error');
+            submitBtn.classList.remove('btn-loading');
+            btnText.textContent = 'Sign In to Dashboard';
+          }
+        }
+      } catch (err) {
+        showAlert('Connection error: ' + err.message, 'error');
+        submitBtn.classList.remove('btn-loading');
+        btnText.textContent = 'Sign In to Dashboard';
+      }
+    });
+
+    // 2. REGISTRATION SUBMISSION (NEW USER)
+    document.getElementById('register-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      hideAlert();
+
+      const nameInput = document.getElementById('reg-name');
+      const emailInput = document.getElementById('reg-email');
+      const usernameInput = document.getElementById('reg-username');
+      const roleSelect = document.getElementById('reg-role');
+      const passwordInput = document.getElementById('reg-password');
+      const confirmInput = document.getElementById('reg-confirm-password');
+      const submitBtn = document.getElementById('reg-submit-btn');
+      const btnText = document.getElementById('reg-btn-text');
+
+      const nameVal = nameInput.value.trim();
+      const emailVal = emailInput.value.trim();
+      const usernameVal = usernameInput.value.trim() || emailVal.split('@')[0];
+      const roleVal = roleSelect.value;
+      const passwordVal = passwordInput.value;
+      const confirmVal = confirmInput.value;
+
+      let isValid = true;
+
+      if (!nameVal) {
+        nameInput.classList.add('is-invalid');
+        isValid = false;
+      } else {
+        nameInput.classList.remove('is-invalid');
+      }
+
+      if (!emailVal || !emailVal.includes('@')) {
+        emailInput.classList.add('is-invalid');
+        isValid = false;
+      } else {
+        emailInput.classList.remove('is-invalid');
+      }
+
+      if (!passwordVal || passwordVal.length < 6) {
+        passwordInput.classList.add('is-invalid');
+        isValid = false;
+      } else {
+        passwordInput.classList.remove('is-invalid');
+      }
+
+      if (passwordVal !== confirmVal) {
+        confirmInput.classList.add('is-invalid');
+        isValid = false;
+      } else {
+        confirmInput.classList.remove('is-invalid');
+      }
+
+      if (!isValid) return;
+
+      // Loading state
+      submitBtn.classList.add('btn-loading');
+      btnText.textContent = 'Creating user account...';
+
+      try {
+        let result = null;
+        if (typeof ApiService !== 'undefined' && ApiService.register) {
+          result = await ApiService.register({
+            name: nameVal,
+            email: emailVal,
+            username: usernameVal,
+            role: roleVal,
+            password: passwordVal
+          });
+        }
+
+        if (result && result.success) {
+          showAlert('Account created successfully! Welcome to Garment Tracker.', 'success');
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';
+          }, 700);
+        } else {
+          showAlert(result ? result.message : 'Registration failed. Please try again.', 'error');
+          submitBtn.classList.remove('btn-loading');
+          btnText.textContent = 'Create Account & Sign In';
+        }
+      } catch (err) {
+        showAlert('Registration error: ' + err.message, 'error');
+        submitBtn.classList.remove('btn-loading');
+        btnText.textContent = 'Create Account & Sign In';
       }
     });
   </script>

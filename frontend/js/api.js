@@ -60,21 +60,48 @@ const ApiService = {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
-      if (res.ok) {
-        const json = await res.json();
+      const json = await res.json();
+      if (res.ok && json.success) {
         if (json.data && json.data.token) {
           this.token = json.data.token;
           localStorage.setItem('garment_jwt_token', this.token);
           if (json.data.user) {
             localStorage.setItem('garment_current_user', JSON.stringify(json.data.user));
+            localStorage.setItem('currentUser', JSON.stringify(json.data.user));
           }
-          return this.token;
         }
+        return { success: true, data: json.data, user: json.data?.user, message: json.message };
       }
+      return { success: false, message: json.message || 'Invalid credentials' };
     } catch (e) {
-      console.warn('Backend login connection unavailable, running with cached data:', e.message);
+      console.warn('Backend login connection unavailable:', e.message);
+      return { success: false, message: 'Server connection error: ' + e.message };
     }
-    return null;
+  },
+
+  async register(userData) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+      });
+      const json = await res.json();
+      if (res.ok && json.success) {
+        if (json.data && json.data.token) {
+          this.token = json.data.token;
+          localStorage.setItem('garment_jwt_token', this.token);
+          if (json.data.user) {
+            localStorage.setItem('garment_current_user', JSON.stringify(json.data.user));
+            localStorage.setItem('currentUser', JSON.stringify(json.data.user));
+          }
+        }
+        return { success: true, data: json.data, user: json.data?.user, message: json.message };
+      }
+      return { success: false, message: json.message || 'Registration failed' };
+    } catch (e) {
+      return { success: false, message: 'Server connection error: ' + e.message };
+    }
   },
 
   async request(endpoint, options = {}) {
