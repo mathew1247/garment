@@ -20,12 +20,23 @@ def serialize_firestore_data(data):
 
 
 import json
+import time
 from pathlib import Path
 
 # Synchronized local memory registry to guarantee 100% uptime even if Firestore daily quotas are exceeded
 _REGISTRY = {}
 _SEEDED = False
 LOCAL_DB_FILE = Path(__file__).resolve().parent.parent / "local_db.json"
+_QUOTA_COOLDOWN_UNTIL = 0
+
+def is_firestore_available():
+    return time.time() > _QUOTA_COOLDOWN_UNTIL
+
+def report_firestore_quota_exceeded():
+    global _QUOTA_COOLDOWN_UNTIL
+    # If 429 quota is hit, suppress remote calls for 10 minutes and use instant local db
+    _QUOTA_COOLDOWN_UNTIL = time.time() + 600
+    logger.info("[Firestore Circuit Breaker] Daily quota limit active. Serving all requests instantly from synchronized local storage.")
 
 def _save_local_registry():
     try:
@@ -161,12 +172,16 @@ class FirestoreRepository:
         self._get_store()[str(item_id)] = data
         _save_local_registry()
 
-        # Persist to Cloud Firestore
-        try:
-            doc_ref = self.collection_ref.document(str(item_id))
-            doc_ref.set(data)
-        except Exception as e:
-            logger.warning(f"[Firestore] Quota exceeded or error during create in {self.collection_name}/{item_id}: {e}")
+        # Persist to Cloud Firestore if quota is available
+        if is_firestore_available():
+            try:
+                doc_ref = self.collection_ref.document(str(item_id))
+                doc_ref.set(data)
+            except Exception as e:
+                if "429" in str(e) or "quota" in str(e).lower():
+                    report_firestore_quota_exceeded()
+                else:
+                    logger.warning(f"[Firestore] Error during create in {self.collection_name}/{item_id}: {e}")
 
         return serialize_firestore_data(data)
 
@@ -175,21 +190,25 @@ class FirestoreRepository:
         if not item_id:
             return None
         
-        # Try Firestore first
-        try:
-            doc_ref = self.collection_ref.document(str(item_id))
-            doc = doc_ref.get()
-            if doc.exists:
-                data = doc.to_dict()
-                if self.id_field not in data:
-                    data[self.id_field] = doc.id
-                if "id" not in data:
-                    data["id"] = doc.id
-                # Cache
-                self._get_store()[str(item_id)] = data
-                return serialize_firestore_data(data)
-        except Exception as e:
-            logger.warning(f"[Firestore] Quota exceeded or error during get_by_id in {self.collection_name}/{item_id}: {e}")
+        # Try Firestore first if available
+        if is_firestore_available():
+            try:
+                doc_ref = self.collection_ref.document(str(item_id))
+                doc = doc_ref.get()
+                if doc.exists:
+                    data = doc.to_dict()
+                    if self.id_field not in data:
+                        data[self.id_field] = doc.id
+                    if "id" not in data:
+                        data["id"] = doc.id
+                    # Cache
+                    self._get_store()[str(item_id)] = data
+                    return serialize_firestore_data(data)
+            except Exception as e:
+                if "429" in str(e) or "quota" in str(e).lower():
+                    report_firestore_quota_exceeded()
+                else:
+                    logger.warning(f"[Firestore] Error during get_by_id in {self.collection_name}/{item_id}: {e}")
 
         # Fallback to local synchronized store
         store = self._get_store()
@@ -208,59 +227,63 @@ class FirestoreRepository:
 
     def get_all(self, filters: dict = None, sort_by: str = None, reverse: bool = False, limit: int = None) -> list:
         """Query documents with optional filters and sorting."""
-        # Try Cloud Firestore live query
-        try:
-            query = self.collection_ref
-            post_filters = {}
-            if filters:
-                for k, v in filters.items():
-                    if v is not None:
-                        if isinstance(v, (str, int, float, bool)):
-                            query = query.where(filter=firestore.FieldFilter(k, "==", v))
-                        elif callable(v):
-                            post_filters[k] = v
-                        else:
-                            query = query.where(filter=firestore.FieldFilter(k, "==", v))
+        # Try Cloud Firestore live query if available
+        if is_firestore_available():
+            try:
+                query = self.collection_ref
+                post_filters = {}
+                if filters:
+                    for k, v in filters.items():
+                        if v is not None:
+                            if isinstance(v, (str, int, float, bool)):
+                                query = query.where(filter=firestore.FieldFilter(k, "==", v))
+                            elif callable(v):
+                                post_filters[k] = v
+                            else:
+                                query = query.where(filter=firestore.FieldFilter(k, "==", v))
 
-            if sort_by and not post_filters:
-                direction = firestore.Query.DESCENDING if reverse else firestore.Query.ASCENDING
-                try:
-                    query = query.order_by(sort_by, direction=direction)
-                except Exception:
-                    pass
+                if sort_by and not post_filters:
+                    direction = firestore.Query.DESCENDING if reverse else firestore.Query.ASCENDING
+                    try:
+                        query = query.order_by(sort_by, direction=direction)
+                    except Exception:
+                        pass
 
-            if limit and not post_filters:
-                query = query.limit(limit)
+                if limit and not post_filters:
+                    query = query.limit(limit)
 
-            docs = query.stream()
-            results = []
-            for doc in docs:
-                data = doc.to_dict()
-                if self.id_field not in data:
-                    data[self.id_field] = doc.id
-                if "id" not in data:
-                    data["id"] = doc.id
-                
-                # Check callable post filters
-                match = True
-                for pk, pv in post_filters.items():
-                    if not pv(data.get(pk)):
-                        match = False
-                        break
-                if match:
-                    results.append(serialize_firestore_data(data))
-                    # Sync to local store
-                    self._get_store()[str(doc.id)] = data
+                docs = query.stream()
+                results = []
+                for doc in docs:
+                    data = doc.to_dict()
+                    if self.id_field not in data:
+                        data[self.id_field] = doc.id
+                    if "id" not in data:
+                        data["id"] = doc.id
+                    
+                    # Check callable post filters
+                    match = True
+                    for pk, pv in post_filters.items():
+                        if not pv(data.get(pk)):
+                            match = False
+                            break
+                    if match:
+                        results.append(serialize_firestore_data(data))
+                        # Sync to local store
+                        self._get_store()[str(doc.id)] = data
 
-            if sort_by and results:
-                results.sort(key=lambda x: str(x.get(sort_by, "")), reverse=reverse)
-            if limit:
-                results = results[:limit]
+                if sort_by and results:
+                    results.sort(key=lambda x: str(x.get(sort_by, "")), reverse=reverse)
+                if limit:
+                    results = results[:limit]
 
-            if results:
-                return results
-        except Exception as e:
-            logger.warning(f"[Firestore] Quota exceeded or error during get_all in {self.collection_name}: {e}")
+                if results:
+                    return results
+            except Exception as e:
+                if "429" in str(e) or "quota" in str(e).lower():
+                    report_firestore_quota_exceeded()
+                else:
+                    logger.warning(f"[Firestore] Error during get_all in {self.collection_name}: {e}")
 
         # Fallback to local synchronized store
         store = self._get_store()
@@ -273,7 +296,7 @@ class FirestoreRepository:
                         if not v(data.get(k)):
                             match = False
                             break
-                    elif v is not None and str(data.get(k)).lower() != str(v).lower():
+                    elif v is not None and str(data.get(k, "")).lower() != str(v).lower():
                         match = False
                         break
             if match:
@@ -304,16 +327,20 @@ class FirestoreRepository:
         store[str(item_id)] = existing
         _save_local_registry()
 
-        # Update Cloud Firestore
-        try:
-            doc_ref = self.collection_ref.document(str(item_id))
-            doc = doc_ref.get()
-            if doc.exists:
-                doc_ref.update(data_to_update)
-            else:
-                doc_ref.set(data_to_update, merge=True)
-        except Exception as e:
-            logger.warning(f"[Firestore] Quota exceeded or error during update in {self.collection_name}/{item_id}: {e}")
+        # Update Cloud Firestore if available
+        if is_firestore_available():
+            try:
+                doc_ref = self.collection_ref.document(str(item_id))
+                doc = doc_ref.get()
+                if doc.exists:
+                    doc_ref.update(data_to_update)
+                else:
+                    doc_ref.set(data_to_update, merge=True)
+            except Exception as e:
+                if "429" in str(e) or "quota" in str(e).lower():
+                    report_firestore_quota_exceeded()
+                else:
+                    logger.warning(f"[Firestore] Error during update in {self.collection_name}/{item_id}: {e}")
 
         return serialize_firestore_data(existing)
 
@@ -327,12 +354,16 @@ class FirestoreRepository:
         store.pop(str(item_id), None)
         _save_local_registry()
 
-        # Remove from Cloud Firestore
-        try:
-            doc_ref = self.collection_ref.document(str(item_id))
-            doc_ref.delete()
-        except Exception as e:
-            logger.warning(f"[Firestore] Quota exceeded or error during delete in {self.collection_name}/{item_id}: {e}")
+        # Remove from Cloud Firestore if available
+        if is_firestore_available():
+            try:
+                doc_ref = self.collection_ref.document(str(item_id))
+                doc_ref.delete()
+            except Exception as e:
+                if "429" in str(e) or "quota" in str(e).lower():
+                    report_firestore_quota_exceeded()
+                else:
+                    logger.warning(f"[Firestore] Error during delete in {self.collection_name}/{item_id}: {e}")
 
         return True
 
