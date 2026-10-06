@@ -1,7 +1,7 @@
 import os
 import sys
 import logging
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from werkzeug.exceptions import HTTPException
 
@@ -10,6 +10,15 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
+
+# Resolve frontend directory location
+candidate_frontend_dirs = [
+    os.path.abspath(os.path.join(current_dir, "..", "frontend")),
+    os.path.abspath(os.path.join(current_dir, "frontend")),
+    os.path.abspath(os.path.join(os.getcwd(), "frontend")),
+    os.path.abspath(os.path.join(os.getcwd(), "..", "frontend")),
+]
+frontend_dir = next((d for d in candidate_frontend_dirs if os.path.isdir(d)), None)
 
 from backend.config import Config, config_by_name
 from backend.routes import ALL_BLUEPRINTS
@@ -116,6 +125,52 @@ def create_app(config_name=None):
                 }
             },
             message="Garment Production Tracking API service active"
+        )
+
+    # Root URL Route - Serves frontend login / dashboard if available, or API status
+    @app.route("/", methods=["GET"])
+    def root():
+        if frontend_dir:
+            login_file = os.path.join(frontend_dir, "login.html")
+            index_file = os.path.join(frontend_dir, "index.html")
+            if os.path.isfile(login_file):
+                return send_from_directory(frontend_dir, "login.html")
+            if os.path.isfile(index_file):
+                return send_from_directory(frontend_dir, "index.html")
+
+        return jsonify({
+            "success": True,
+            "message": "Garment Production Tracking API is running!",
+            "status": "online",
+            "health_check": "/api/health",
+            "api_overview": "/api"
+        }), 200
+
+    # Serve frontend assets and pages (CSS, JS, images, HTML)
+    @app.route("/<path:path>", methods=["GET"])
+    def serve_frontend(path):
+        # Allow API routes to be handled by Flask/blueprints or fall through
+        if path.startswith("api/") or path == "api":
+            return error_response(
+                message=f"The requested API endpoint '/{path}' was not found.",
+                error_code="NOT_FOUND",
+                status_code=404
+            )
+
+        if frontend_dir:
+            file_path = os.path.join(frontend_dir, path)
+            if os.path.isfile(file_path):
+                return send_from_directory(frontend_dir, path)
+
+            # Check if matching HTML file exists (e.g., /dashboard -> dashboard.html)
+            html_path = os.path.join(frontend_dir, f"{path}.html")
+            if os.path.isfile(html_path):
+                return send_from_directory(frontend_dir, f"{path}.html")
+
+        return error_response(
+            message=f"The requested resource '/{path}' was not found on the server.",
+            error_code="NOT_FOUND",
+            status_code=404
         )
 
     # Register all blueprints

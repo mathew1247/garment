@@ -2,8 +2,10 @@
  * GARMENT TRACKER - API SERVICE & CLOUD FIRESTORE INTEGRATION
  * Facilitates live communication between the frontend and Python Flask REST API / Firestore.
  */
-
-const API_BASE_URL = 'http://127.0.0.1:5000/api';
+// Dynamically determine backend URL (uses localhost for Live Server, or relative /api when hosted on Render)
+const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && (window.location.port === '5500' || window.location.port === '8080' || window.location.port === '3000')
+  ? 'http://127.0.0.1:5000/api'
+  : `${window.location.origin}/api`;
 
 function normalizeOrder(o) {
   if (!o) return null;
